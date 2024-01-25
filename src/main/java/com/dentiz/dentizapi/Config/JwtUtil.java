@@ -5,12 +5,21 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
     private static String secretKey="D4nt1z_4p1";
-    private static Algorithm algorithm= Algorithm.HMAC256(secretKey);
+    private static Algorithm algorithm;
+
+    static {
+        try {
+            algorithm = Algorithm.HMAC256(secretKey);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public String createToken(String username) {
         return JWT.create()

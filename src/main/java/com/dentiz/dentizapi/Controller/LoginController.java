@@ -25,12 +25,13 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO)  {
         UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
         Authentication authentication = this.authenticationManager.authenticate(login);
 
 
         String token = this.jwUtil.createToken(loginDTO.getUsername());
+
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).build();
     }
 }
