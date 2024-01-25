@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Config.Security;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.dentiz.dentizapi.Application.Application;
 import com.dentiz.dentizapi.Config.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.UnsupportedEncodingException;
+
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
@@ -28,12 +31,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf().disable()
-                .cors().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests(authorize -> authorize
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // Permitir recursos estáticos
-                        .requestMatchers(Application.API_BASE_PATH + "/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class);

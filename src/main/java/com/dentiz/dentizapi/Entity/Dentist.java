@@ -51,4 +51,7 @@ public class Dentist {
         this.password = password;
         this.description = description;
     }
+
+    public Dentist() {
+    }
 }

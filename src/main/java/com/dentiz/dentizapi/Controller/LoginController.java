@@ -25,12 +25,20 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO)  {
+    public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO) throws Exception {
         UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
-        Authentication authentication = this.authenticationManager.authenticate(login);
-
-
-        String token = this.jwUtil.createToken(loginDTO.getUsername());
+        //Authentication authentication = this.authenticationManager.authenticate(login);
+        try {
+             Authentication authentication = this.authenticationManager.authenticate(login);
+        } catch (Exception e) {
+            throw new Exception("Invalid username/password");
+        }
+        String token;
+        try {
+             token = this.jwUtil.createToken(loginDTO.getUsername());
+        }catch (Exception e){
+            throw new Exception("Error creating token");
+        }
 
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).build();
     }

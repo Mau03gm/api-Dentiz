@@ -19,12 +19,13 @@ public class LoginService implements UserDetailsService {
         Dentist dentist = dentistRepository.findByUsernameOrEmail(username, username);
         if (dentist == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
-        } else {
+        }
             return User.builder()
                     .username(dentist.getUsername())
                     .password(dentist.getPassword())
+                    .roles("DENTIST")
                     .build();
-        }
+
     }
 
 
