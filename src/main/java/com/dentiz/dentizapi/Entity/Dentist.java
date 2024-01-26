@@ -34,6 +34,9 @@ public class Dentist {
     @Column (name = "description", nullable = true )
     private String description;
 
+    @OneToOne(mappedBy = "dentist")
+    private DentistService dentistService;
+
     public Dentist(RegisterDentistDTO dentistDTO) {
         this.username = dentistDTO.getUsername();
         this.firstName = dentistDTO.getFirstName();
