@@ -31,7 +31,7 @@ public class LoginController {
         try {
              Authentication authentication = this.authenticationManager.authenticate(login);
         } catch (Exception e) {
-            throw new Exception("Invalid username/password");
+            throw new Exception("Username/Contraseña incorrectos");
         }
         String token;
         try {

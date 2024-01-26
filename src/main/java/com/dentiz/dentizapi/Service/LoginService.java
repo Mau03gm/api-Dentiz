@@ -18,7 +18,7 @@ public class LoginService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Dentist dentist = dentistRepository.findByUsernameOrEmail(username, username);
         if (dentist == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
             return User.builder()
                     .username(dentist.getUsername())

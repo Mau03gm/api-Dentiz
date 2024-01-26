@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Entity;
 
+import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,14 +34,13 @@ public class Dentist {
     @Column (name = "description", nullable = true )
     private String description;
 
-    public Dentist(String username, String firstName, String lastName, String license, String email, String password, String description) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.license = license;
-        this.email = email;
-        this.password = password;
-        this.description = description;
+    public Dentist(RegisterDentistDTO dentistDTO) {
+        this.username = dentistDTO.getUsername();
+        this.firstName = dentistDTO.getFirstName();
+        this.lastName = dentistDTO.getLastName();
+        this.license = dentistDTO.getLicense();
+        this.email = dentistDTO.getEmail();
+        this.description = dentistDTO.getDescription();
     }
 
     public void updateDentist(){
@@ -48,7 +48,6 @@ public class Dentist {
         this.lastName = lastName;
         this.license = license;
         this.email = email;
-        this.password = password;
         this.description = description;
     }
 
