@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Entity;
 
+import com.dentiz.dentizapi.Entity.DTO.EditDentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -44,18 +45,16 @@ public class Dentist {
         this.username = dentistDTO.getUsername();
         this.firstName = dentistDTO.getFirstName();
         this.lastName = dentistDTO.getLastName();
-        this.license = dentistDTO.getLicense();
         this.email = dentistDTO.getEmail();
         this.phone = dentistDTO.getPhone();
-        this.description = dentistDTO.getDescription();
     }
 
-    public void updateDentist(){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.license = license;
-        this.email = email;
-        this.description = description;
+    public void updateDentistProfile(EditDentistProfileDTO editDentistProfileDTO){
+        this.username = editDentistProfileDTO.getUsername();
+        this.firstName = editDentistProfileDTO.getFirstName();
+        this.lastName = editDentistProfileDTO.getLastName();
+        this.license = editDentistProfileDTO.getLicense();
+        this.description = editDentistProfileDTO.getDescription();
     }
 
     public Dentist() {

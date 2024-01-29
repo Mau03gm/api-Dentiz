@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class EditDentistProfileDTO {
 
+    private String username;
     private String firstName;
     private String lastName;
-    private String phone;
+    private String license;
     private String description;
 }
