@@ -3,6 +3,8 @@ package com.dentiz.dentizapi.Controller;
 import com.dentiz.dentizapi.Application.Application;
 import com.dentiz.dentizapi.Config.JwtUtil;
 import com.dentiz.dentizapi.Entity.DTO.LoginDTO;
+import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
+import com.dentiz.dentizapi.Service.DentistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ public class AuthController {
 
     @Autowired
     private  AuthenticationManager authenticationManager;
+    @Autowired
+    private DentistService dentistService;
     @Autowired
     private  JwtUtil jwUtil;
 
@@ -42,4 +46,14 @@ public class AuthController {
 
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).build();
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<RegisterDentistDTO> registerDentist(@RequestBody RegisterDentistDTO registerDentistDTO) throws Exception{
+        dentistService.registerDentist(registerDentistDTO);
+        UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(registerDentistDTO.getUsername(), registerDentistDTO.getPassword());
+        Authentication authentication = this.authenticationManager.authenticate(login);
+        String token = this.jwUtil.createToken(registerDentistDTO.getUsername());
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(registerDentistDTO);
+    }
+
 }

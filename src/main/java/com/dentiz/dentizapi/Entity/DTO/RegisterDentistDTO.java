@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class RegisterDentistDTO {
-
     private String username;
     private String firstName;
     private String lastName;

@@ -17,11 +17,6 @@ public class DentistController {
     @Autowired
     private DentistService dentistService;
 
-    @PostMapping("/register")
-    public ResponseEntity<RegisterDentistDTO> registerDentist(@RequestBody RegisterDentistDTO registerDentistDTO) throws Exception{
-       dentistService.registerDentist(registerDentistDTO);
-         return ResponseEntity.ok(registerDentistDTO);
-    }
 
-    
+
 }
