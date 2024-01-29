@@ -22,8 +22,11 @@ public class Dentist {
     @Column (name = "last_name", nullable = false, length = 50 )
     private String lastName;
 
-    @Column (name = "license", unique = true )
+    @Column (name = "license", unique = true, nullable = true, length = 50 )
     private String license;
+
+    @Column (name = "phone", nullable = false, length = 15 )
+    private String phone;
 
     @Column (name = "email", nullable = false )
     private String email;
@@ -43,6 +46,7 @@ public class Dentist {
         this.lastName = dentistDTO.getLastName();
         this.license = dentistDTO.getLicense();
         this.email = dentistDTO.getEmail();
+        this.phone = dentistDTO.getPhone();
         this.description = dentistDTO.getDescription();
     }
 
