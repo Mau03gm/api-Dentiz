@@ -19,10 +19,15 @@ public class PriceService {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
-    private Service service;
+    private ServiceEntity service;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dentist_details_id")
     private DentistDetails dentistDetails;
 
+    public PriceService(Double price, ServiceEntity service, DentistDetails dentistDetails) {
+        this.price = price;
+        this.service = service;
+        this.dentistDetails = dentistDetails;
+    }
 }
