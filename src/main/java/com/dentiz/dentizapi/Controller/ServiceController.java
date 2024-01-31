@@ -29,9 +29,9 @@ public class ServiceController {
         return ResponseEntity.ok(serviceService.deleteService(id));
     }
 
-    @PostMapping("/addServiceToDentist/{username}")
-    public ResponseEntity addServiceToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
-        serviceService.addServiceToDentist(service, username);
+    @PostMapping("/addAllServiceToDentist/{username}")
+    public ResponseEntity addServicesToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
+        serviceService.addServicesToDentist(service, username);
         return ResponseEntity.ok().build();
     }
 
@@ -47,8 +47,13 @@ public class ServiceController {
     }
 
     @DeleteMapping("/deleteServiceToDentist/{username}")
-    public ResponseEntity deleteServiceToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
-        serviceService.deleteServiceToDentist(service.getIdService(), username);
+    public ResponseEntity deleteServiceToDentist(@PathVariable String username, @RequestBody Integer service) throws Exception {
+        serviceService.deleteServiceToDentist(service, username);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getServicePriceFromDentist/{username}")
+    public ResponseEntity<ServiceDTO> getServicePriceFromDentist(@PathVariable String username, @RequestBody Integer service ) throws Exception {
+        return ResponseEntity.ok(serviceService.getPriceServiceFromDentist(username, service));
     }
 }

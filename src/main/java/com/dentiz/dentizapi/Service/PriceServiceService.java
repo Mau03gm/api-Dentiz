@@ -61,8 +61,8 @@ public class PriceServiceService {
     }
 
 
-    public ServiceDTO getPriceServiceFromDentist( Integer idService) throws Exception {
-        PriceService priceService = priceServiceRepository.findByServiceId(idService);
+    public ServiceDTO getPriceServiceFromDentist( ServiceEntity service, DentistDetails dentistDetails) throws Exception {
+        PriceService priceService = priceServiceRepository.findByServiceAndDentistDetails(service, dentistDetails);
         if(priceService == null) {
             throw new Exception("PriceService not found");
         }

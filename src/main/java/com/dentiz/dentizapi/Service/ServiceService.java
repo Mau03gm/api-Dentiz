@@ -42,7 +42,7 @@ public class ServiceService {
         return getAllServices();
     }
 
-    public void addServiceToDentist(ServiceDTO service, String username) throws Exception {
+    public void addServicesToDentist(ServiceDTO service, String username) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
 
         if(service.getIdsServices().size() != service.getPrices().size() ) {
@@ -79,6 +79,15 @@ public class ServiceService {
     public ServiceDTO getAllServiceFromDentist(String username) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         return priceServiceService.getAllPriceServiceFromDentist(dentist.getDentistDetails());
+    }
+
+    public ServiceDTO getPriceServiceFromDentist(String username, Integer idService) throws Exception {
+        Dentist dentist = dentistService.validateIfDentistExists(username, username);
+        ServiceEntity service = serviceRepository.findById(idService).orElse(null);
+        if(service == null) {
+            throw new Exception("Servicio no encontrado");
+        }
+        return priceServiceService.getPriceServiceFromDentist(service, dentist.getDentistDetails());
     }
 
 }
