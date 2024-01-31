@@ -1,6 +1,6 @@
 package com.dentiz.dentizapi.Entity;
 
-import com.dentiz.dentizapi.Entity.DTO.EditDentistProfileDTO;
+import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,7 +39,7 @@ public class Dentist {
     private String description;
 
     @OneToOne(mappedBy = "dentist")
-    private DentistService dentistService;
+    private DentistDetails dentistDetails;
 
     public Dentist(RegisterDentistDTO dentistDTO) {
         this.username = dentistDTO.getUsername();
@@ -49,12 +49,12 @@ public class Dentist {
         this.phone = dentistDTO.getPhone();
     }
 
-    public void updateDentistProfile(EditDentistProfileDTO editDentistProfileDTO){
-        this.username = editDentistProfileDTO.getUsername();
-        this.firstName = editDentistProfileDTO.getFirstName();
-        this.lastName = editDentistProfileDTO.getLastName();
-        this.license = editDentistProfileDTO.getLicense();
-        this.description = editDentistProfileDTO.getDescription();
+    public void updateDentistProfile(DentistProfileDTO dentistProfileDTO){
+        this.username = dentistProfileDTO.getUsername();
+        this.firstName = dentistProfileDTO.getFirstName();
+        this.lastName = dentistProfileDTO.getLastName();
+        this.license = dentistProfileDTO.getLicense();
+        this.description = dentistProfileDTO.getDescription();
     }
 
     public Dentist() {

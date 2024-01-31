@@ -22,7 +22,7 @@ public class PriceService {
     private Service service;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dentist_service_id")
-    private DentistService dentistService;
+    @JoinColumn(name = "dentist_details_id")
+    private DentistDetails dentistDetails;
 
 }
