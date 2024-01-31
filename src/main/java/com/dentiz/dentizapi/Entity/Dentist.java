@@ -38,7 +38,7 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
-    @OneToOne(mappedBy = "dentist")
+    @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;
 
     public Dentist(RegisterDentistDTO dentistDTO) {
