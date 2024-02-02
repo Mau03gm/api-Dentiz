@@ -37,9 +37,9 @@ public class ServiceController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getServiceFromDentist/{username}")
-    public ResponseEntity<List<ServiceDTO>> getServiceFromDentist(@PathVariable String username) throws Exception {
-        return ResponseEntity.ok(servicesService.getAllServiceFromDentist(username));
+    @GetMapping("/getServicesFromDentist/{username}")
+    public ResponseEntity<List<ServiceDTO>> getServicesFromDentist(@PathVariable String username) throws Exception {
+        return ResponseEntity.ok(servicesService.getAllServicesFromDentist(username));
     }
 
     @PatchMapping("/updateServiceToDentist/{username}")

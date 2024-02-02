@@ -82,7 +82,7 @@ public class ServicesService {
         priceServiceService.deletePriceServiceToDentist(serviceEntity, dentist.getDentistDetails());
     }
 
-    public List<ServiceDTO> getAllServiceFromDentist(String username) throws Exception {
+    public List<ServiceDTO> getAllServicesFromDentist(String username) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         return  priceServiceService.getAllPriceServiceFromDentist(dentist.getDentistDetails());
     }
