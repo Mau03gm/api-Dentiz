@@ -1,15 +1,14 @@
 package com.dentiz.dentizapi.Service;
 
-import com.dentiz.dentizapi.Entity.Appointment;
+import com.dentiz.dentizapi.Entity.*;
 import com.dentiz.dentizapi.Entity.DTO.AppointmentDTO;
 import com.dentiz.dentizapi.Entity.DTO.HoursDTO;
-import com.dentiz.dentizapi.Entity.Dentist;
-import com.dentiz.dentizapi.Entity.Patient;
-import com.dentiz.dentizapi.Entity.ServiceEntity;
 import com.dentiz.dentizapi.Repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AppointmentService {
@@ -19,14 +18,12 @@ public class AppointmentService {
     private DentistService dentistService;
     private AppointmentRepository appointmentRepository;
     private ServicesService servicesService;
-    private HourService hourService;
 
     @Autowired
-    public AppointmentService(PatientService patientService, DentistService dentistService, AppointmentRepository appointmentRepository, ServicesService servicesService, HourService hourService) {
+    public AppointmentService(PatientService patientService, DentistService dentistService, AppointmentRepository appointmentRepository, ServicesService servicesService) {
         this.patientService = patientService;
         this.dentistService = dentistService;
         this.servicesService = servicesService;
-        this.hourService = hourService;
         this.appointmentRepository = appointmentRepository;
     }
 
@@ -70,16 +67,12 @@ public class AppointmentService {
     public HoursDTO getHoursByDentistAndDate(String username, AppointmentDTO appointmentDTO) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         List<Appointment> appointments = appointmentRepository.findByDentistDetailsAndDate(dentist.getDentistDetails(), appointmentDTO.getDate());
-        String[] hoursBusy = new String[appointments.size()];
         if (appointments.isEmpty()) {
             return HoursDTO.builder().hours(dentist.getDentistDetails().getHour().getHours()).build();
         }
-        for (int i = 0; i < appointments.size(); i++) {
-            hoursBusy[i] = appointments.get(i).getHour();
-        }
-        List<String> hoursDentist = hourService.deleteBusyHours(dentist.getDentistDetails().getHour(), hoursBusy);
+        String[] hoursBusy = appointments.stream().map(Appointment::getHour).toArray(String[]::new);
+        List<String> hoursDentist = deleteBusyHours(dentist.getDentistDetails().getHour(), hoursBusy);
         return HoursDTO.builder().hours(hoursDentist.toArray(String[]::new)).build();
-
     }
 
     public List<AppointmentDTO> getAppointmentsByDate(LocalDate date) {
@@ -99,5 +92,11 @@ public class AppointmentService {
         List<Appointment> appointments = appointmentRepository.findByDentistDetailsAndYearAndMonth(dentist.getDentistDetails(), date.getYear(), date.getMonthValue());
         return appointments.stream().map(AppointmentDTO::new).toList();
 
+    }
+
+    private List<String> deleteBusyHours(Hour hours, String[] busyHours) {
+        List<String> hoursDentist = new ArrayList<>(Arrays.asList(hours.getHours()));
+        hoursDentist.removeAll(Arrays.asList(busyHours));
+        return hoursDentist;
     }
 }

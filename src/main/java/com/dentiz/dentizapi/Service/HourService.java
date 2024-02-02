@@ -7,6 +7,8 @@ import com.dentiz.dentizapi.Repository.HourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -47,9 +49,5 @@ public class HourService {
                 .build();
     }
 
-    public List<String> deleteBusyHours(Hour hours, String[] busyHours) throws Exception {
-        List<String> hoursDentist= List.of(hours.getHours());
-        hoursDentist.removeAll(List.of(busyHours));
-        return hoursDentist;
-    }
+
 }
