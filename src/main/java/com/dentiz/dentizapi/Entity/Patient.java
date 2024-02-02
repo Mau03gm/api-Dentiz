@@ -1,6 +1,6 @@
 package com.dentiz.dentizapi.Entity;
 
-import com.dentiz.dentizapi.Entity.DTO.PatientDTO;
+import com.dentiz.dentizapi.Entity.DTO.AppointmentDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +22,12 @@ public class Patient {
     @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
 
-    public Patient(PatientDTO patientDTO) {
-        this.nameComplete = patientDTO.getNameComplete();
-        this.email = patientDTO.getEmail();
+    @Column(name = "phone", nullable = true, unique = true, length = 15)
+    private String phone;
+
+    public Patient(AppointmentDTO appointmentDTO) {
+        this.nameComplete = appointmentDTO.getPatientName();
+        this.email = appointmentDTO.getPatientEmail();
+        this.phone = appointmentDTO.getPatientPhone();
     }
 }

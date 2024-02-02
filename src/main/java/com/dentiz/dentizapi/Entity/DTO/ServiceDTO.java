@@ -16,16 +16,7 @@ public class ServiceDTO {
     private Integer idService;
 
     @Nullable
-    private List<Integer> idsServices;
-
-    @Nullable
     private String name;
-
-    @Nullable
-    private List<String> names;
-
-    @Nullable
-    private List<Double> prices;
 
     @Nullable
     private  Double price;
@@ -36,18 +27,6 @@ public class ServiceDTO {
         return this;
     }
 
-    public ServiceDTO listServiceToDTO(List<ServiceEntity> services) {
-        this.idsServices = services.stream().map(ServiceEntity::getId).toList();
-        this.names = services.stream().map(ServiceEntity::getName).toList();
-        return this;
-    }
-
-    public ServiceDTO listPriceServiceToDTO(List<PriceService> priceServices) {
-        this.idsServices = priceServices.stream().map(priceService -> priceService.getService().getId()).toList();
-        this.names = priceServices.stream().map(priceService -> priceService.getService().getName()).toList();
-        this.prices = priceServices.stream().map(PriceService::getPrice).toList();
-        return this;
-    }
 
     public ServiceDTO priceServiceToDTO(PriceService priceServices) {
         this.idService = priceServices.getService().getId();

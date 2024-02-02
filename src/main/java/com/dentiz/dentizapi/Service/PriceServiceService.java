@@ -42,22 +42,22 @@ public class PriceServiceService {
         priceServiceRepository.delete(priceService);
     }
 
-    public ServiceDTO getAllPriceServiceFromDentist(DentistDetails dentistDetails) throws Exception {
+    public List<ServiceDTO> getAllPriceServiceFromDentist(DentistDetails dentistDetails) throws Exception {
         List<PriceService> priceServices = priceServiceRepository.findByDentistDetails(dentistDetails);
         if(priceServices == null) {
             throw new Exception("PriceService not found");
         }
         ServiceDTO serviceDTO = new ServiceDTO();
-        return serviceDTO.listPriceServiceToDTO(priceServices);
+        return  priceServices.stream().map(serviceDTO::priceServiceToDTO).toList();
     }
 
-    public ServiceDTO getServiceNamesFromDentist(DentistDetails dentistDetails) throws Exception {
+    public List<ServiceDTO> getServiceNamesFromDentist(DentistDetails dentistDetails) throws Exception {
         List<PriceService> priceServices = priceServiceRepository.findByDentistDetails(dentistDetails);
         if(priceServices == null) {
             throw new Exception("PriceService not found");
         }
-
-        return new ServiceDTO().listPriceServiceToDTO(priceServices);
+        ServiceDTO serviceDTO = new ServiceDTO();
+        return priceServices.stream().map(serviceDTO::priceServiceToDTO).toList();
     }
 
 

@@ -30,4 +30,7 @@ public class DentistDetails {
     @JoinColumn(name = "hour_id")
     private Hour hour;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dentistDetails")
+    private List<Appointment> appointments;
+
 }

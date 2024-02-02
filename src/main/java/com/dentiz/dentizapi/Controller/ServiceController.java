@@ -2,58 +2,60 @@ package com.dentiz.dentizapi.Controller;
 
 import com.dentiz.dentizapi.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.ServiceDTO;
-import com.dentiz.dentizapi.Service.ServiceService;
+import com.dentiz.dentizapi.Service.ServicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(Application.API_BASE_PATH+"/service")
 public class ServiceController {
 
     @Autowired
-    private ServiceService serviceService;
+    private ServicesService servicesService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<ServiceDTO> getAllServices() {
-        return ResponseEntity.ok(serviceService.getAllServices());
+    public ResponseEntity<List<ServiceDTO>> getAllServices() {
+        return ResponseEntity.ok(servicesService.getAllServices());
     }
 
     @GetMapping("/add")
-    public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service) {
-        return ResponseEntity.ok(serviceService.addService(service));
+    public ResponseEntity<List<ServiceDTO>> addService(@RequestBody ServiceDTO service) {
+        return ResponseEntity.ok(servicesService.addService(service));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ServiceDTO> deleteService(@PathVariable Integer id) {
-        return ResponseEntity.ok(serviceService.deleteService(id));
+    public ResponseEntity<List<ServiceDTO>> deleteService(@PathVariable Integer id) {
+        return ResponseEntity.ok(servicesService.deleteService(id));
     }
 
     @PostMapping("/addAllServiceToDentist/{username}")
-    public ResponseEntity addServicesToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
-        serviceService.addServicesToDentist(service, username);
+    public ResponseEntity addServicesToDentist(@PathVariable String username, @RequestBody List<ServiceDTO> services) throws Exception {
+        servicesService.addServicesToDentist(services, username);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getServiceFromDentist/{username}")
-    public ResponseEntity<ServiceDTO> getServiceFromDentist(@PathVariable String username) throws Exception {
-        return ResponseEntity.ok(serviceService.getAllServiceFromDentist(username));
+    public ResponseEntity<List<ServiceDTO>> getServiceFromDentist(@PathVariable String username) throws Exception {
+        return ResponseEntity.ok(servicesService.getAllServiceFromDentist(username));
     }
 
     @PatchMapping("/updateServiceToDentist/{username}")
     public ResponseEntity updateServiceToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
-        serviceService.updateServiceToDentist(service.getIdService(), username, service.getPrice());
+        servicesService.updateServiceToDentist(service, username, service.getPrice());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/deleteServiceToDentist/{username}")
     public ResponseEntity deleteServiceToDentist(@PathVariable String username, @RequestBody Integer service) throws Exception {
-        serviceService.deleteServiceToDentist(service, username);
+        servicesService.deleteServiceToDentist(service, username);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getServicePriceFromDentist/{username}")
     public ResponseEntity<ServiceDTO> getServicePriceFromDentist(@PathVariable String username, @RequestBody Integer service ) throws Exception {
-        return ResponseEntity.ok(serviceService.getPriceServiceFromDentist(username, service));
+        return ResponseEntity.ok(servicesService.getPriceServiceFromDentist(username, service));
     }
 }
