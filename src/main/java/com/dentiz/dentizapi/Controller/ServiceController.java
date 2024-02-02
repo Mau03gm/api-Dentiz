@@ -18,17 +18,17 @@ public class ServiceController {
 
     @GetMapping("/getAll")
     public ResponseEntity<List<ServiceDTO>> getAllServices() {
-        return ResponseEntity.ok(servicesService.getAllServices());
+        return ResponseEntity.ok().body(servicesService.getAllServices());
     }
 
     @GetMapping("/add")
     public ResponseEntity<List<ServiceDTO>> addService(@RequestBody ServiceDTO service) {
-        return ResponseEntity.ok(servicesService.addService(service));
+        return ResponseEntity.ok().body(servicesService.addService(service));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<List<ServiceDTO>> deleteService(@PathVariable Integer id) {
-        return ResponseEntity.ok(servicesService.deleteService(id));
+        return ResponseEntity.ok().body(servicesService.deleteService(id));
     }
 
     @PostMapping("/addAllServiceToDentist/{username}")
@@ -39,7 +39,7 @@ public class ServiceController {
 
     @GetMapping("/getServicesFromDentist/{username}")
     public ResponseEntity<List<ServiceDTO>> getServicesFromDentist(@PathVariable String username) throws Exception {
-        return ResponseEntity.ok(servicesService.getAllServicesFromDentist(username));
+        return ResponseEntity.ok().body(servicesService.getAllServicesFromDentist(username));
     }
 
     @PatchMapping("/updateServiceToDentist/{username}")
@@ -56,6 +56,6 @@ public class ServiceController {
 
     @GetMapping("/getServicePriceFromDentist/{username}")
     public ResponseEntity<ServiceDTO> getServicePriceFromDentist(@PathVariable String username, @RequestBody Integer service ) throws Exception {
-        return ResponseEntity.ok(servicesService.getPriceServiceFromDentist(username, service));
+        return ResponseEntity.ok().body(servicesService.getPriceServiceFromDentist(username, service));
     }
 }
