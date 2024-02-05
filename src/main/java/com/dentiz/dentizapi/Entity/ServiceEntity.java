@@ -3,6 +3,7 @@ package com.dentiz.dentizapi.Entity;
 import com.dentiz.dentizapi.Entity.DTO.ServiceDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Table(name = "service")
 @Getter
 @Setter
+@NoArgsConstructor
 public class ServiceEntity {
 
     @Id
@@ -27,4 +29,8 @@ public class ServiceEntity {
         this.name = serviceDTO.getName();
     }
 
+    public ServiceEntity(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -1,7 +1,7 @@
 package com.dentiz.dentizapi.Controller;
 
 
-import com.dentiz.dentizapi.Application.Application;
+import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.AppointmentDTO;
 import com.dentiz.dentizapi.Entity.DTO.HoursDTO;
 import com.dentiz.dentizapi.Service.AppointmentService;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -35,18 +36,18 @@ public class AppointmentController {
     }
 
     @GetMapping("/{username}/andDate")
-    public ResponseEntity <List<AppointmentDTO>> getAppointmentsByDate(@PathVariable String username, @RequestParam AppointmentDTO appointmentDTO) throws Exception {
+    public ResponseEntity <List<AppointmentDTO>> getAppointmentsByDate(@PathVariable String username, @RequestBody AppointmentDTO appointmentDTO) throws Exception {
         return ResponseEntity.ok().body( appointmentService.getAppointmentsByDateAndDentist(username, appointmentDTO.getDate()));
     }
 
     @GetMapping("/{username}/andMonth")
-    public ResponseEntity <List<AppointmentDTO>> getAppointmentsByMonth(@PathVariable String username, @RequestParam AppointmentDTO appointmentDTO) throws Exception {
+    public ResponseEntity <List<AppointmentDTO>> getAppointmentsByMonth(@PathVariable String username, @RequestBody AppointmentDTO appointmentDTO) throws Exception {
         return ResponseEntity.ok().body( appointmentService.getAppointmentsByMonthAndYearAndDentist(username, appointmentDTO));
     }
 
     @GetMapping("/{username}/hours")
-    public ResponseEntity <HoursDTO> getHours(@PathVariable String username, @RequestParam AppointmentDTO appointmentDTO) throws Exception {
-        return ResponseEntity.ok().body(appointmentService.getHoursByDentistAndDate(username, appointmentDTO));
+    public ResponseEntity <HoursDTO> getHours(@PathVariable String username, @RequestBody AppointmentDTO appointmentDTO) throws Exception {
+        return ResponseEntity.ok().body(appointmentService.getHoursByDentistAndDate(username, appointmentDTO.getDate()));
     }
 }
 

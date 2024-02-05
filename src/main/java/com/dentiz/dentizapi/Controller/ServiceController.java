@@ -1,6 +1,6 @@
 package com.dentiz.dentizapi.Controller;
 
-import com.dentiz.dentizapi.Application.Application;
+import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.ServiceDTO;
 import com.dentiz.dentizapi.Service.ServicesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class ServiceController {
         return ResponseEntity.ok().body(servicesService.getAllServices());
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<List<ServiceDTO>> addService(@RequestBody ServiceDTO service) {
         return ResponseEntity.ok().body(servicesService.addService(service));
     }
@@ -31,7 +31,7 @@ public class ServiceController {
         return ResponseEntity.ok().body(servicesService.deleteService(id));
     }
 
-    @PostMapping("/addAllServiceToDentist/{username}")
+    @PostMapping("/addServicesToDentist/{username}")
     public ResponseEntity addServicesToDentist(@PathVariable String username, @RequestBody List<ServiceDTO> services) throws Exception {
         servicesService.addServicesToDentist(services, username);
         return ResponseEntity.ok().build();

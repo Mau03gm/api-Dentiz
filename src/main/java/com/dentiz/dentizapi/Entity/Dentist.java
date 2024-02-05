@@ -4,6 +4,7 @@ import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Table (name = "dentist", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")})
+@NoArgsConstructor
 public class Dentist {
 
     @Id
@@ -38,6 +40,9 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
+    @Column (name = "enabled", nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled;
+
     @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;
 
@@ -57,6 +62,4 @@ public class Dentist {
         this.description = dentistProfileDTO.getDescription();
     }
 
-    public Dentist() {
-    }
 }

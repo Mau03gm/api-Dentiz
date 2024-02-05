@@ -30,7 +30,7 @@ public class JwtUtil {
                 .withSubject(username)
                 .withIssuer("Dentiz API")
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(15)))
+                .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(30)))
                 .sign(algorithm);
     }
 

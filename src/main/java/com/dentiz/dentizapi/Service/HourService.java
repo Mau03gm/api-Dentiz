@@ -24,6 +24,7 @@ public class HourService {
     public HoursDTO addHourToDentist( String username, String[] hours) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         Hour hour= new Hour(hours);
+        hourRepository.save(hour);
         dentistDetailsService.addHoursToDentistDetails(hour, dentist);
         return HoursDTO.builder()
                 .hours(hour.getHours())
@@ -32,10 +33,9 @@ public class HourService {
 
     public HoursDTO getHoursByDentist(String username) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        Hour hour= dentist.getDentistDetails().getHour();
         HoursDTO hours;
         return hours= HoursDTO.builder()
-                .hours(hour.getHours())
+                .hours(dentist.getDentistDetails().getHour().getHours())
                 .build();
     }
 

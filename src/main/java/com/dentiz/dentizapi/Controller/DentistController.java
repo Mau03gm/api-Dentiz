@@ -1,6 +1,6 @@
 package com.dentiz.dentizapi.Controller;
 
-import com.dentiz.dentizapi.Application.Application;
+import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Service.DentistService;
 import org.springframework.beans.factory.annotation.Autowired;

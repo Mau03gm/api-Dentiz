@@ -29,6 +29,7 @@ public class ServicesService {
 
     public List<ServiceDTO> addService(ServiceDTO service) {
         ServiceEntity serviceEntity = new ServiceEntity(service);
+        serviceRepository.save(serviceEntity);
         return getAllServices();
     }
 
@@ -55,12 +56,17 @@ public class ServicesService {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
 
         int indexPriceService;
+        try{
         for(indexPriceService=0; indexPriceService<services.size(); indexPriceService++) {
             ServiceEntity service = serviceRepository.findById(services.get(indexPriceService).getIdService()).orElse(null);
             if(service == null) {
                 throw new Exception("Servicio no encontrado");
             }
             priceServiceService.addPriceServiceToDentist(service, dentist.getDentistDetails(), services.get(indexPriceService).getPrice());
+        }
+        }
+        catch (Exception e){
+            throw new Exception("Error al agregar servicios"+ e);
         }
     }
 

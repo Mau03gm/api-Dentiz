@@ -66,9 +66,9 @@ public class AppointmentService {
         return appointments.stream().map(AppointmentDTO::new).toList();
     }
 
-    public HoursDTO getHoursByDentistAndDate(String username, AppointmentDTO appointmentDTO) throws Exception {
+    public HoursDTO getHoursByDentistAndDate(String username, LocalDate date) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        List<Appointment> appointments = appointmentRepository.findByDentistDetailsAndDate(dentist.getDentistDetails(), appointmentDTO.getDate());
+        List<Appointment> appointments = appointmentRepository.findByDentistDetailsAndDate(dentist.getDentistDetails(), date);
         if (appointments.isEmpty()) {
             return HoursDTO.builder().hours(dentist.getDentistDetails().getHour().getHours()).build();
         }

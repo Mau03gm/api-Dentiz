@@ -36,4 +36,6 @@ public class AppointmentDTO {
         this.hour = appointment.getHour();
     }
 
+    public AppointmentDTO() {
+    }
 }
