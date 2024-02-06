@@ -35,6 +35,7 @@ public class AppointmentService {
         ServiceEntity service = servicesService.getService(appointmentDTO.getServiceId());
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         Appointment appointment = new Appointment(appointmentDTO, dentist.getDentistDetails(), patient, service);
+        appointment = appointmentRepository.save(appointment);
         return appointmentDTO;
     }
 
@@ -62,29 +63,27 @@ public class AppointmentService {
 
     public List<AppointmentDTO> getAppointmentsByDentist(String username) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        List<Appointment> appointments = appointmentRepository.findByDentistDetails(dentist.getDentistDetails());
+        List<Appointment> appointments = dentist.getDentistDetails().getAppointments();
         return appointments.stream().map(AppointmentDTO::new).toList();
     }
 
     public HoursDTO getHoursByDentistAndDate(String username, LocalDate date) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        List<Appointment> appointments = appointmentRepository.findByDentistDetailsAndDate(dentist.getDentistDetails(), date);
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByDentistDetailsAndDate(dentist.getDentistDetails(), date);
+        System.out.println(appointments.size());
         if (appointments.isEmpty()) {
+            System.out.println("No hay citas");
             return HoursDTO.builder().hours(dentist.getDentistDetails().getHour().getHours()).build();
         }
-        String[] hoursBusy = appointments.stream().map(Appointment::getHour).toArray(String[]::new);
+        List<String> hoursBusy = appointments.stream().map(Appointment::getHour).toList();
         List<String> hoursDentist = deleteBusyHours(dentist.getDentistDetails().getHour(), hoursBusy);
         return HoursDTO.builder().hours(hoursDentist.toArray(String[]::new)).build();
     }
 
-    public List<AppointmentDTO> getAppointmentsByDate(LocalDate date) {
-        List<Appointment> appointments = appointmentRepository.findByDate(date);
-        return appointments.stream().map(AppointmentDTO::new).toList();
-    }
 
     public List<AppointmentDTO> getAppointmentsByDateAndDentist(String username, LocalDate date) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        List<Appointment> appointments = appointmentRepository.findByDentistDetailsAndDate(dentist.getDentistDetails(), date);
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByDentistDetailsAndDate(dentist.getDentistDetails(), date);
         return appointments.stream().map(AppointmentDTO::new).toList();
     }
 
@@ -96,9 +95,9 @@ public class AppointmentService {
 
     }
 
-    private List<String> deleteBusyHours(Hour hours, String[] busyHours) {
+    private List<String> deleteBusyHours(Hour hours, List<String> busyHours) {
         List<String> hoursDentist = new ArrayList<>(Arrays.asList(hours.getHours()));
-        hoursDentist.removeAll(Arrays.asList(busyHours));
+        hoursDentist.removeAll(busyHours);
         return hoursDentist;
     }
 }

@@ -29,10 +29,10 @@ public class PatientService {
     }
 
     public Patient checkPatient(Patient patient) {
-        patient = patientRepository.findByEmail(patient.getEmail());
-        if (patient == null) {
+       Patient patientFound = patientRepository.findByEmail(patient.getEmail());
+        if (patientFound == null) {
            return addPatient(patient);
         }
-        return patient;
+        return patientFound;
     }
 }
