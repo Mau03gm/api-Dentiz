@@ -42,9 +42,6 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
-    @Column (name = "created_at", nullable = false)
-    private LocalDate created_at = LocalDate.now();
-
     @Column (name = "free_trial_date", nullable = true)
     private LocalDate freeTrialDate;
 
