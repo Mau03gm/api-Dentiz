@@ -3,15 +3,17 @@ package com.dentiz.dentizapi.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Table(name = "dentist_service")
+@Table(name = "dentist_details")
 @Getter
 @Setter
-public class DentistService {
+@NoArgsConstructor
+public class DentistDetails {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -21,6 +23,14 @@ public class DentistService {
     @JoinColumn(name = "dentist_id")
     private Dentist dentist;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dentistService")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dentistDetails")
     private List<PriceService> priceServices;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hour_id")
+    private Hour hour;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dentistDetails")
+    private List<Appointment> appointments;
+
 }
