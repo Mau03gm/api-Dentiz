@@ -2,6 +2,7 @@ package com.dentiz.dentizapi.Entity;
 
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
+import com.dentiz.dentizapi.Entity.Enum.SubscriptionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,6 +45,9 @@ public class Dentist {
 
     @Column (name = "free_trial_date", nullable = true)
     private LocalDate freeTrialDate;
+
+    @Column (name = "subscription_Id", nullable = false)
+    private String subscriptionId;
 
     @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;
