@@ -1,8 +1,10 @@
 package com.dentiz.dentizapi.Entity;
 
+import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -11,6 +13,7 @@ import lombok.Setter;
 @Table (name = "dentist", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")})
+@NoArgsConstructor
 public class Dentist {
 
     @Id
@@ -37,27 +40,26 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
-    @OneToOne(mappedBy = "dentist")
-    private DentistService dentistService;
+    @Column (name = "enabled", nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled;
+
+    @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
+    private DentistDetails dentistDetails;
 
     public Dentist(RegisterDentistDTO dentistDTO) {
         this.username = dentistDTO.getUsername();
         this.firstName = dentistDTO.getFirstName();
         this.lastName = dentistDTO.getLastName();
-        this.license = dentistDTO.getLicense();
         this.email = dentistDTO.getEmail();
         this.phone = dentistDTO.getPhone();
-        this.description = dentistDTO.getDescription();
     }
 
-    public void updateDentist(){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.license = license;
-        this.email = email;
-        this.description = description;
+    public void updateDentistProfile(DentistProfileDTO dentistProfileDTO){
+        this.username = dentistProfileDTO.getUsername();
+        this.firstName = dentistProfileDTO.getFirstName();
+        this.lastName = dentistProfileDTO.getLastName();
+        this.license = dentistProfileDTO.getLicense();
+        this.description = dentistProfileDTO.getDescription();
     }
 
-    public Dentist() {
-    }
 }

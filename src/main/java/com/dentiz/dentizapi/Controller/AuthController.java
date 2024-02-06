@@ -1,6 +1,6 @@
 package com.dentiz.dentizapi.Controller;
 
-import com.dentiz.dentizapi.Application.Application;
+import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Config.JwtUtil;
 import com.dentiz.dentizapi.Entity.DTO.LoginDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
