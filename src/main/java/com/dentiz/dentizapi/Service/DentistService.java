@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class DentistService {
 
@@ -22,6 +24,7 @@ public class DentistService {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
         Dentist dentist= new Dentist(dentistDTO);
         dentist.setPassword(passwordEncoder.encode(dentistDTO.getPassword()));
+        dentist.setFreeTrialDate(LocalDate.now().plusDays(14));
         dentistRepository.save(dentist);
         dentistDetailsService.addDentistToDentistDetails(dentist);
         return dentistDTO;

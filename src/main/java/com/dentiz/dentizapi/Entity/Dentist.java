@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
@@ -40,8 +42,11 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
-    @Column (name = "enabled", nullable = false, columnDefinition = "boolean default true")
-    private boolean enabled;
+    @Column (name = "created_at", nullable = false)
+    private LocalDate created_at = LocalDate.now();
+
+    @Column (name = "free_trial_date", nullable = true)
+    private LocalDate freeTrialDate;
 
     @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;
