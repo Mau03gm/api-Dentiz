@@ -43,12 +43,6 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
-    @Column (name = "free_trial_date", nullable = true)
-    private LocalDate freeTrialDate;
-
-    @Column (name = "subscription_Id", nullable = false)
-    private String subscriptionId;
-
     @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;
 

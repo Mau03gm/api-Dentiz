@@ -24,9 +24,8 @@ public class DentistService {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
         Dentist dentist= new Dentist(dentistDTO);
         dentist.setPassword(passwordEncoder.encode(dentistDTO.getPassword()));
-        dentist.setFreeTrialDate(LocalDate.now().plusDays(14));
         dentistRepository.save(dentist);
-        dentistDetailsService.addDentistToDentistDetails(dentist);
+        dentistDetailsService.addDentistToDentistDetails(dentist, dentistDTO.getToken());
         return dentistDTO;
     }
 
