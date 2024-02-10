@@ -22,6 +22,7 @@ public class ConstructStripe {
             plan.setName("Basic");
             plan.setDescription("Plan básico");
             plan.setStripeId("prod_PWcyVoDKedLxBV");
+            plan.setSubscriptionId("price_1OhZiCJ3FiyOPn4xp1pSczl5");
             plan.setPrice(new BigDecimal(500).multiply(new BigDecimal(100))); // 500 pesos mexicanos en centavos
             plan.setCurrency("mxn");
             plan.setFreeTrialDays(14);

@@ -20,6 +20,8 @@ public class Plan {
     private Integer id;
     @Column(name = "stripe_id")
     private String stripeId;
+    @Column(name = "subscription_id")
+    private String subscriptionId;
     @Column(name = "name")
     private String name;
     @Column(name = "description")

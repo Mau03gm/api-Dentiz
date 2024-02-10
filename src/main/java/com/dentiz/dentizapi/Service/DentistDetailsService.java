@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.dentiz.dentizapi.Components.Stripe.Service.StripeService;
 import com.dentiz.dentizapi.Entity.Dentist;
 import com.dentiz.dentizapi.Entity.DentistDetails;
@@ -19,7 +20,9 @@ public class DentistDetailsService {
     public void addDentistToDentistDetails(Dentist dentist, String token) {
         DentistDetails dentistDetails = new DentistDetails();
         dentistDetails.setDentist(dentist);
-        dentistDetails.setCostumerId( stripeService.createCostumer(dentist, token));
+        //dentistDetails.setCostumerId( stripeService.createCostumer(dentist, token));
+       // Plan plan = stripeService.getPlan("Basic");
+       // dentistDetails.setSubscriptionId(stripeService.createCostumerSubscription(dentistDetails.getCostumerId(),plan ));
         dentistDetailsRepository.save(dentistDetails);
     }
 

@@ -1,6 +1,7 @@
 package com.dentiz.dentizapi.Entity;
 
 
+import com.dentiz.dentizapi.Components.Stripe.Plan;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class DentistDetails {
 
     @Column (name = "costumer_id", nullable = false)
     private String costumerId;
+
+    @Column(name = "subscription_id")
+    private String subscriptionId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dentist_id")

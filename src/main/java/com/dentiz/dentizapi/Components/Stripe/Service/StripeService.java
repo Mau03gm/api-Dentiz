@@ -16,10 +16,16 @@ import java.util.Map;
 @Service
 public class StripeService {
 
+    private final StripeRepository stripeRepository;
+
+    private final StripeConfig stripeConfig;
+
     @Autowired
-    private StripeRepository stripeRepository;
-    @Autowired
-    private StripeConfig stripeConfig;
+    public StripeService(StripeRepository stripeRepository, StripeConfig stripeConfig) {
+        this.stripeRepository = stripeRepository;
+        this.stripeConfig= stripeConfig;
+
+    }
 
     public String createCostumer(Dentist dentist, String token) {
         Map<String, Object> customerParams = Map.of(
@@ -27,7 +33,7 @@ public class StripeService {
                 "email", dentist.getEmail(),
                 "source", token
         );
-        Customer costumer;
+        Customer costumer= null;
         try{
           costumer = stripeConfig.getStripeClient().customers().create((CustomerCreateParams) customerParams);
         } catch (StripeException e) {
@@ -57,17 +63,22 @@ public class StripeService {
         }
     }
 
-    public void createCostumerSubscription(String costumerId, Plan plan) {
+    public String createCostumerSubscription(String costumerId, Plan plan) {
         Map<String, Object> subscriptionParams = Map.of(
                 "customer", costumerId,
                 "items", Map.of("plan", plan.getStripeId() ),
                 "trial_period_days", plan.getFreeTrialDays()
         );
+        Subscription subscription= null;
         try {
-            stripeConfig.getStripeClient().subscriptions().create((SubscriptionCreateParams) subscriptionParams);
+            subscription=stripeConfig.getStripeClient().subscriptions().create((SubscriptionCreateParams) subscriptionParams);
         } catch (StripeException e) {
             throw new RuntimeException("Error al crear la suscripción en Stripe");
         }
+        if (subscription == null) {
+            throw new RuntimeException("Error al crear la suscripción: la suscripción es nula");
+        }
+        return subscription.getId();
     }
 
     public void updateCostumerSubscription(String costumerId, Plan plan) {
@@ -83,12 +94,16 @@ public class StripeService {
         }
     }
 
-    public void deleteCostumerSubscription(String costumerId) {
+    public void deleteCostumerSubscription(String subscriptionId) {
         try {
-            stripeConfig.getStripeClient().subscriptions().cancel(costumerId, (SubscriptionCancelParams) null);
+            stripeConfig.getStripeClient().subscriptions().cancel(subscriptionId);
         } catch (StripeException e) {
             throw new RuntimeException("Error al eliminar la suscripción en Stripe");
         }
+    }
+
+    public Plan getPlan(String name) {
+        return stripeRepository.findByName(name);
     }
 
 }

@@ -8,12 +8,9 @@ import org.springframework.context.annotation.Configuration;
 public class StripeConfig {
     @Value("${stripe.public-key}")
     private String publicKey;
-    @Value("${stripe.api-key}")
-    private String apiKey;
-
     public StripeClient getStripeClient() {
         return new StripeClient(
-                apiKey
+                publicKey
         );
     }
 }
