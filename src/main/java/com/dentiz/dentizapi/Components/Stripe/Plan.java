@@ -31,5 +31,5 @@ public class Plan {
     @Column(name = "currency")
     private String currency; // Moneda (ej. "eur")
     @Column(name = "free_trial_days")
-    private Integer freeTrialDays;
+    private Long freeTrialDays;
 }

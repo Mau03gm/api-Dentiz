@@ -28,16 +28,16 @@ public class StripeService {
     }
 
     public String createCostumer(Dentist dentist, String token) {
-        Map<String, Object> customerParams = Map.of(
-                "name", dentist.getFirstName() + " " + dentist.getLastName(),
-                "email", dentist.getEmail(),
-                "source", token
-        );
+        CustomerCreateParams customerParams = CustomerCreateParams.builder()
+                .setName(dentist.getFirstName() + " " + dentist.getLastName())
+                .setEmail(dentist.getEmail())
+                .setPaymentMethod(token)
+                .build();
         Customer costumer= null;
         try{
-          costumer = stripeConfig.getStripeClient().customers().create((CustomerCreateParams) customerParams);
+          costumer = stripeConfig.getStripeClient().customers().create(customerParams);
         } catch (StripeException e) {
-           throw new RuntimeException("Error al crear el cliente en Stripe");
+           throw new RuntimeException("Error al crear el cliente en Stripe"+e.getMessage());
         }
         return costumer.getId();
     }
@@ -50,30 +50,30 @@ public class StripeService {
         }
     }
 
-    public void updateCostumer(Dentist dentist, String token) {
-        Map<String, Object> customerParams = Map.of(
-                "name", dentist.getFirstName() + " " + dentist.getLastName(),
-                "email", dentist.getEmail(),
-                "source", token
-        );
+    public void updateCostumerPaymentMethod(Dentist dentist, String token) {
+        CustomerUpdateParams customerParams= CustomerUpdateParams.builder()
+                .setName(dentist.getFirstName() + " " + dentist.getLastName())
+                .setEmail(dentist.getEmail())
+                .setDefaultSource(token)
+                .build();
         try {
-            stripeConfig.getStripeClient().customers().update(dentist.getDentistDetails().getCostumerId(), (CustomerUpdateParams) customerParams);
+            stripeConfig.getStripeClient().customers().update(dentist.getDentistDetails().getCostumerId(),  customerParams);
         } catch (StripeException e) {
             throw new RuntimeException("Error al actualizar el cliente en Stripe");
         }
     }
 
     public String createCostumerSubscription(String costumerId, Plan plan) {
-        Map<String, Object> subscriptionParams = Map.of(
-                "customer", costumerId,
-                "items", Map.of("plan", plan.getStripeId() ),
-                "trial_period_days", plan.getFreeTrialDays()
-        );
+        SubscriptionCreateParams subscriptionParams = SubscriptionCreateParams.builder()
+                .setCustomer(costumerId)
+                .addItem(SubscriptionCreateParams.Item.builder().setPlan(plan.getStripeId()).build())
+                .setTrialPeriodDays(plan.getFreeTrialDays())
+                .build();
         Subscription subscription= null;
         try {
-            subscription=stripeConfig.getStripeClient().subscriptions().create((SubscriptionCreateParams) subscriptionParams);
+            subscription=stripeConfig.getStripeClient().subscriptions().create( subscriptionParams);
         } catch (StripeException e) {
-            throw new RuntimeException("Error al crear la suscripción en Stripe");
+            throw new RuntimeException("Error al crear la suscripción en Stripe" + e.getMessage());
         }
         if (subscription == null) {
             throw new RuntimeException("Error al crear la suscripción: la suscripción es nula");

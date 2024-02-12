@@ -31,7 +31,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO) throws Exception {
         UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
-        //Authentication authentication = this.authenticationManager.authenticate(login);
         try {
              Authentication authentication = this.authenticationManager.authenticate(login);
         } catch (Exception e) {
@@ -54,6 +53,11 @@ public class AuthController {
         Authentication authentication = this.authenticationManager.authenticate(login);
         String token = this.jwUtil.createToken(registerDentistDTO.getUsername());
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(registerDentistDTO);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "").build();
     }
 
 }
