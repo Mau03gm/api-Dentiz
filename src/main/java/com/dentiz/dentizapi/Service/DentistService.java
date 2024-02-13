@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Components.Stripe.Service.StripeService;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import com.dentiz.dentizapi.Entity.Dentist;
@@ -19,6 +20,9 @@ public class DentistService {
     private DentistDetailsService dentistDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private StripeService stripeService;
 
     public RegisterDentistDTO registerDentist(RegisterDentistDTO dentistDTO) throws Exception {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
@@ -61,5 +65,13 @@ public class DentistService {
         if (dentist!=null) {
             throw new Exception("Nombre de usuario en uso");
         }
+    }
+
+    public void deleteDentist(String username) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        //dentistDetailsService.deleteDentistDetails(dentist);
+        stripeService.deleteCostumerSubscription(dentist.getDentistDetails().getSubscriptionId());
+        stripeService.deleteCostumer(dentist.getDentistDetails().getCostumerId());
+        dentistRepository.delete(dentist);
     }
 }

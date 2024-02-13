@@ -11,8 +11,6 @@ import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 @Service
 public class StripeService {
 
@@ -81,14 +79,12 @@ public class StripeService {
         return subscription.getId();
     }
 
-    public void updateCostumerSubscription(String costumerId, Plan plan) {
-        Map<String, Object> subscriptionParams = Map.of(
-                "customer", costumerId,
-                "items", Map.of("plan", plan.getStripeId() ),
-                "trial_period_days", plan.getFreeTrialDays()
-        );
+    public void updateCostumerSubscription(String susbcriptionId, Plan plan) {
+        SubscriptionUpdateParams subscriptionParams = SubscriptionUpdateParams.builder()
+                .addItem(SubscriptionUpdateParams.Item.builder().setId(plan.getStripeId()).build())
+                .build();
         try {
-            stripeConfig.getStripeClient().subscriptions().update(costumerId, (SubscriptionUpdateParams) subscriptionParams);
+            stripeConfig.getStripeClient().subscriptions().update(susbcriptionId,  subscriptionParams);
         } catch (StripeException e) {
             throw new RuntimeException("Error al actualizar la suscripción en Stripe");
         }
