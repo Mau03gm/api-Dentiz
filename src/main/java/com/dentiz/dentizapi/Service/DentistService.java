@@ -29,7 +29,7 @@ public class DentistService {
         Dentist dentist= new Dentist(dentistDTO);
         dentist.setPassword(passwordEncoder.encode(dentistDTO.getPassword()));
         dentistRepository.save(dentist);
-        dentistDetailsService.addDentistToDentistDetails(dentist, dentistDTO.getToken());
+        dentistDetailsService.addDentistToDentistDetails(dentist, dentistDTO.getPaymentMethod());
         return dentistDTO;
     }
 

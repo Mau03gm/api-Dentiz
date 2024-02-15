@@ -26,6 +26,8 @@ public class AppointmentDTO {
 
     private String hour;
 
+    private String paymentMethod;
+
     public AppointmentDTO(Appointment appointment) {
         this.id = appointment.getId();
         this.patientName = appointment.getPatient().getNameComplete();

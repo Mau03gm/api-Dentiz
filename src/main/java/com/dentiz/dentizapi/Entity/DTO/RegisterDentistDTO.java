@@ -10,5 +10,5 @@ public class RegisterDentistDTO {
     private String phone;
     private String email;
     private String password;
-    private String token;
+    private String paymentMethod;
 }
