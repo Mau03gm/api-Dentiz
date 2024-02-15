@@ -2,6 +2,8 @@ package com.dentiz.dentizapi.Controller;
 
 import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
+import com.dentiz.dentizapi.Entity.Dentist;
+import com.dentiz.dentizapi.Service.DentistDetailsService;
 import com.dentiz.dentizapi.Service.DentistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,11 @@ public class DentistController {
 
     @Autowired
     private DentistService dentistService;
+    @Autowired
+    private DentistDetailsService dentistDetailsService;
 
 
-    @PostMapping("/profile/{username}")
+    @PatchMapping ("/profile/{username}")
     public ResponseEntity<DentistProfileDTO> editProfile(@RequestBody DentistProfileDTO dentistDTO, @PathVariable String username) throws Exception{
         dentistService.editProfile(dentistDTO, username);
         return ResponseEntity.ok().body(dentistDTO);
@@ -25,6 +29,13 @@ public class DentistController {
     public ResponseEntity<DentistProfileDTO> getProfile(@PathVariable String username) throws Exception{
         DentistProfileDTO dentistProfileDTO = dentistService.getProfile(username);
         return ResponseEntity.ok().body(dentistProfileDTO);
+    }
+
+    @PostMapping("/addPaymentMethod/{username}")
+    public ResponseEntity<Void> addPaymentMethod(@RequestBody String token, @PathVariable String username) throws Exception{
+        Dentist dentist = dentistService.validateIfDentistExists(username, username);
+        dentistDetailsService.addDentistToDentistDetails(dentist, token);
+        return ResponseEntity.ok().build();
     }
 
 }
