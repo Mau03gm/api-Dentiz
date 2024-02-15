@@ -1,0 +1,4 @@
+#USE JAVA 17
+#USE INTELLIJI IDEA
+![image](https://github.com/Mau03gm/api-Dentiz/assets/139919533/b182489a-97a7-4129-a516-7e95e0327741)
+#DEVELOP IS STABLE & TESTED
