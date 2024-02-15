@@ -55,9 +55,6 @@ public class Dentist {
     }
 
     public void updateDentistProfile(DentistProfileDTO dentistProfileDTO){
-        this.username = dentistProfileDTO.getUsername();
-        this.firstName = dentistProfileDTO.getFirstName();
-        this.lastName = dentistProfileDTO.getLastName();
         this.license = dentistProfileDTO.getLicense();
         this.description = dentistProfileDTO.getDescription();
     }

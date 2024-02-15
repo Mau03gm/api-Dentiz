@@ -36,8 +36,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, Application.API_BASE_PATH+"/appointment/**").permitAll()
                         .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/appointment/{username}/hours").permitAll()
                         .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/dentist/profile/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/service/getServicesFromDentist/{username").permitAll()
-                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/service/getServicePriceFromDentist/{username}").permitAll()
+                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/service/ServicesDentist/{username}").permitAll()
+                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/service/ServiceDentist/{username}").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // Permitir recursos estáticos
                         .anyRequest().authenticated()
                 )

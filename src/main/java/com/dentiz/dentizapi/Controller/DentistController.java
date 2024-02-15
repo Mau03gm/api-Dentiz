@@ -21,14 +21,12 @@ public class DentistController {
 
     @PatchMapping ("/profile/{username}")
     public ResponseEntity<DentistProfileDTO> editProfile(@RequestBody DentistProfileDTO dentistDTO, @PathVariable String username) throws Exception{
-        dentistService.editProfile(dentistDTO, username);
-        return ResponseEntity.ok().body(dentistDTO);
+        return ResponseEntity.ok().body(dentistService.editProfile(dentistDTO, username));
     }
 
     @GetMapping("/profile/{username}")
     public ResponseEntity<DentistProfileDTO> getProfile(@PathVariable String username) throws Exception{
-        DentistProfileDTO dentistProfileDTO = dentistService.getProfile(username);
-        return ResponseEntity.ok().body(dentistProfileDTO);
+        return ResponseEntity.ok().body( dentistService.getProfile(username));
     }
 
     @PostMapping("/addPaymentMethod/{username}")

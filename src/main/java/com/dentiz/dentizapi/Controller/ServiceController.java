@@ -49,13 +49,13 @@ public class ServiceController {
     }
 
     @DeleteMapping("/ServiceDentist/{username}")
-    public ResponseEntity deleteServiceToDentist(@PathVariable String username, @RequestBody Integer service) throws Exception {
-        servicesService.deleteServiceToDentist(service, username);
+    public ResponseEntity deleteServiceToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
+        servicesService.deleteServiceToDentist(service.getIdService(), username);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/ServiceFromDentist/{username}")
-    public ResponseEntity<ServiceDTO> getServicePriceFromDentist(@PathVariable String username, @RequestBody Integer service ) throws Exception {
-        return ResponseEntity.ok().body(servicesService.getPriceServiceFromDentist(username, service));
+    @GetMapping("/ServiceDentist/{username}")
+    public ResponseEntity<ServiceDTO> getServicePriceFromDentist(@PathVariable String username, @RequestBody ServiceDTO service ) throws Exception {
+        return ResponseEntity.ok().body(servicesService.getPriceServiceFromDentist(username, service.getIdService()));
     }
 }

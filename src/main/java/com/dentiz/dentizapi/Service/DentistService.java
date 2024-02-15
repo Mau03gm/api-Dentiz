@@ -33,10 +33,10 @@ public class DentistService {
         return dentistDTO;
     }
 
-    public void editProfile(DentistProfileDTO dentistDTO, String username) throws Exception {
+    public DentistProfileDTO editProfile(DentistProfileDTO dentistDTO, String username) throws Exception {
         Dentist dentist = validateIfDentistExists(username, username);
         dentist.updateDentistProfile(dentistDTO);
-        dentistRepository.save(dentist);
+         return new DentistProfileDTO(dentistRepository.save(dentist));
     }
 
     public DentistProfileDTO getProfile(String username) throws Exception {

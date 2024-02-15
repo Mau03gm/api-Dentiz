@@ -25,4 +25,7 @@ public class DentistProfileDTO {
         this.license = dentist.getLicense();
         this.description = dentist.getDescription();
     }
+
+    public DentistProfileDTO() {
+    }
 }
