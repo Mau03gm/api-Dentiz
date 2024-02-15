@@ -16,45 +16,45 @@ public class ServiceController {
     @Autowired
     private ServicesService servicesService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/")
     public ResponseEntity<List<ServiceDTO>> getAllServices() {
         return ResponseEntity.ok().body(servicesService.getAllServices());
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<List<ServiceDTO>> addService(@RequestBody ServiceDTO service) {
         return ResponseEntity.ok().body(servicesService.addService(service));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<List<ServiceDTO>> deleteService(@PathVariable Integer id) {
         return ResponseEntity.ok().body(servicesService.deleteService(id));
     }
 
-    @PostMapping("/addServicesToDentist/{username}")
+    @PostMapping("/ServicesDentist/{username}")
     public ResponseEntity addServicesToDentist(@PathVariable String username, @RequestBody List<ServiceDTO> services) throws Exception {
         servicesService.addServicesToDentist(services, username);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getServicesFromDentist/{username}")
+    @GetMapping("/ServicesDentist/{username}")
     public ResponseEntity<List<ServiceDTO>> getServicesFromDentist(@PathVariable String username) throws Exception {
         return ResponseEntity.ok().body(servicesService.getAllServicesFromDentist(username));
     }
 
-    @PatchMapping("/updateServiceToDentist/{username}")
+    @PatchMapping("/ServiceDentist/{username}")
     public ResponseEntity updateServiceToDentist(@PathVariable String username, @RequestBody ServiceDTO service) throws Exception {
         servicesService.updateServiceToDentist(service, username, service.getPrice());
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/deleteServiceToDentist/{username}")
+    @DeleteMapping("/ServiceDentist/{username}")
     public ResponseEntity deleteServiceToDentist(@PathVariable String username, @RequestBody Integer service) throws Exception {
         servicesService.deleteServiceToDentist(service, username);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getServicePriceFromDentist/{username}")
+    @GetMapping("/ServiceFromDentist/{username}")
     public ResponseEntity<ServiceDTO> getServicePriceFromDentist(@PathVariable String username, @RequestBody Integer service ) throws Exception {
         return ResponseEntity.ok().body(servicesService.getPriceServiceFromDentist(username, service));
     }

@@ -2,10 +2,13 @@ package com.dentiz.dentizapi.Entity;
 
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
+import com.dentiz.dentizapi.Entity.Enum.SubscriptionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -39,9 +42,6 @@ public class Dentist {
 
     @Column (name = "description", nullable = true, length = 255)
     private String description;
-
-    @Column (name = "enabled", nullable = false, columnDefinition = "boolean default true")
-    private boolean enabled;
 
     @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;

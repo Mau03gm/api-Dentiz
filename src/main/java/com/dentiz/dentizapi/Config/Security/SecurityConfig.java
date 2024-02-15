@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Config.Security;
 
+import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Config.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -31,8 +32,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource.corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, Application.API_BASE_PATH+"/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, Application.API_BASE_PATH+"/appointment/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/appointment/{username}/hours").permitAll()
+                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/dentist/profile/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/service/getServicesFromDentist/{username").permitAll()
+                        .requestMatchers(HttpMethod.GET, Application.API_BASE_PATH+"/service/getServicePriceFromDentist/{username}").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // Permitir recursos estáticos
                         .anyRequest().authenticated()
                 )
