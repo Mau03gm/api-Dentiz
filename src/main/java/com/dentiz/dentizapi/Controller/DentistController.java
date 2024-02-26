@@ -36,4 +36,9 @@ public class DentistController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/setStripeAccount/{username}")
+    public ResponseEntity<String> setStripeAccount(@RequestBody DentistProfileDTO dentistProfileDTO, @PathVariable String username) throws Exception{
+        return ResponseEntity.ok().body(dentistService.SetStripeAccount(dentistProfileDTO.getAccountStripeId(), username));
+    }
+
 }

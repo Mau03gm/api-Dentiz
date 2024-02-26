@@ -1,4 +1,4 @@
-package com.dentiz.dentizapi.Components.Stripe.Service;
+package com.dentiz.dentizapi.Components.Stripe.Service.Subscription;
 
 import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.dentiz.dentizapi.Components.Stripe.Repository.StripeRepository;
@@ -98,8 +98,20 @@ public class StripeService {
         }
     }
 
+    public Boolean costumerSubscriptionIsActive(String subscriptionId) {
+        try {
+            Subscription subscription = stripeConfig.getStripeClient().subscriptions().retrieve(subscriptionId);
+            return subscription.getStatus().equals("active");
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al obtener el estado de la suscripción en Stripe");
+        }
+    }
+
     public Plan getPlan(String name) {
         return stripeRepository.findByName(name);
     }
+
+
+
 
 }

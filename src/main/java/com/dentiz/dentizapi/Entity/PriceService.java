@@ -23,6 +23,8 @@ public class PriceService {
     @JoinColumn(name = "service_id")
     private ServiceEntity service;
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dentist_details_id")
     private DentistDetails dentistDetails;

@@ -1,6 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
-import com.dentiz.dentizapi.Components.Stripe.Service.StripeService;
+import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeService;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import com.dentiz.dentizapi.Entity.Dentist;
@@ -8,8 +8,6 @@ import com.dentiz.dentizapi.Repository.DentistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class DentistService {
@@ -51,6 +49,13 @@ public class DentistService {
             throw new Exception("Dentista no encontrado");
         }
         return dentist;
+    }
+
+    public String SetStripeAccount(String accountStripeId, String username) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        dentist.setAccountStripeId(accountStripeId);
+        dentistRepository.save(dentist);
+        return accountStripeId;
     }
 
     private void validateIfDentistAlreadyExists(String username, String email) throws Exception {

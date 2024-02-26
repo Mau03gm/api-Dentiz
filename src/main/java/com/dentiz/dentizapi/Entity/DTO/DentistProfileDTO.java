@@ -14,6 +14,8 @@ public class DentistProfileDTO {
     private String license;
     private String description;
     @Nullable
+    private String accountStripeId;
+    @Nullable
     private String photoProfileUrl;
     @Nullable
     private byte[] photoProfileImage;

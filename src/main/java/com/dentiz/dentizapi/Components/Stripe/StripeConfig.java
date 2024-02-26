@@ -10,6 +10,10 @@ public class StripeConfig {
     private String publicKey;
     @Value("${stripe.secret-key}")
     private String secretKey;
+
+    @Value("${stripe.stripe-id}")
+    private String stripeId;
+
     public StripeClient getStripeClient() {
         return new StripeClient(
                 secretKey
