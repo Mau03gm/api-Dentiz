@@ -8,6 +8,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +16,8 @@ public class StripeServices {
     private final StripeRepository stripeRepository;
     private final StripeConfig stripeConfig;
 
-    private static final String PLATFORM_ACCOUNT_ID = "acct_1OkYrHQpnEyfWZ9s";
+    @Value("stripe.stripe-id")
+    private String PLATFORM_ACCOUNT_ID ;
 
     @Autowired
     public StripeServices(StripeRepository stripeRepository, StripeConfig stripeConfig) {
