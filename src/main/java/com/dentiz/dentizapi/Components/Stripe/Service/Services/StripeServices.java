@@ -68,26 +68,57 @@ public class StripeServices {
         try {
             Transfer.create(params);
         } catch (StripeException e) {
-            throw new RuntimeException("Error al crear la transferencia en Stripe");
+            throw new RuntimeException("Error al crear la transferencia en Stripe"+ e.getMessage());
 
         }
 
     }
 
-    public void createAccount(Dentist dentist){
+    public String createAccountStripeConnect(Dentist dentist){
         AccountCreateParams params =
                 AccountCreateParams.builder()
                         .setType(AccountCreateParams.Type.EXPRESS)
                         .setCountry("MX")
                         .setEmail(dentist.getEmail())
-                        .setExternalAccount(dentist.getAccountStripeId())
+                        .setCapabilities(
+                                AccountCreateParams.Capabilities.builder()
+                                        .setCardPayments(
+                                                AccountCreateParams.Capabilities.CardPayments.builder()
+                                                        .setRequested(true)
+                                                        .build()
+                                        )
+                                        .setTransfers(AccountCreateParams.Capabilities.Transfers.builder()
+                                                .setRequested(true)
+                                                .build())
+                                        .build()
+                        )
                         .build();
+        Account account;
 
         try {
-            Account.create(params);
+            account=Account.create(params);
         } catch (StripeException e) {
             throw new RuntimeException("Error al crear la cuenta en Stripe");
         }
+       return account.getId();
+    }
+
+    public String createAccountLink(Dentist dentist){
+        AccountLinkCreateParams params =
+                AccountLinkCreateParams.builder()
+                        .setAccount(dentist.getAccountStripeId())
+                        .setRefreshUrl("http://localhost:3000")
+                        .setReturnUrl("http://localhost:3000")
+                        .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
+                        .build();
+        AccountLink accountLink;
+        try {
+            accountLink = AccountLink.create(params);
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al crear el link de la cuenta en Stripe"+ e.getMessage());
+        }
+
+        return  accountLink.getUrl();
     }
 
 

@@ -24,7 +24,7 @@ public class DentistDetailsService {
         dentistDetails.setDentist(dentist);
         dentistDetails.setCostumerId( stripeService.createCostumer(dentist, token));
        Plan plan = stripeService.getPlan("Basic");
-       dentistDetails.setSubscriptionId(stripeService.createCostumerSubscription(dentistDetails.getCostumerId(),plan ));
+       dentistDetails.setSubscriptionId(stripeService.createCostumerSubscription(dentistDetails.getCostumerId(),plan ,token));
         dentistDetailsRepository.save(dentistDetails);
     }
 
