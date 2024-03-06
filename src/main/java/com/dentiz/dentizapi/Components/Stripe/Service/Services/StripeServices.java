@@ -26,53 +26,30 @@ public class StripeServices {
     }
 
 
-    public void createCharge(Dentist dentist, PriceService priceService, String paymentMethodId){
-        double doctorPercentage = 0.9;
-        long priceInCents = (long)(priceService.getPrice() * 100);
-        long doctorAmount = (long) (priceInCents * doctorPercentage);
-        long platformAmount = priceInCents - doctorAmount;
-
-        ChargeCreateParams chargeParams = ChargeCreateParams.builder()
-                .setAmount(priceInCents)
-                .setCurrency("mxn")
-                .setSource(paymentMethodId)
-                .setDescription(priceService.getService().getName())
-                .setDestination(ChargeCreateParams.Destination.builder()
-                        .setAccount(dentist.getAccountStripeId())
-                        .setAmount(doctorAmount)
-                        .build())
-                .setDestination(ChargeCreateParams.Destination.builder()
-                        .setAccount(PLATFORM_ACCOUNT_ID)
-                        .setAmount(platformAmount)
-                        .build())
-                .build();
-
-        Charge charge;
-        try {
-            charge = Charge.create(chargeParams);
-        } catch (StripeException e) {
-            throw new RuntimeException("Error al cargar el cliente en Stripe");
-        }
-        CreateTransfer(charge, priceInCents);
-    }
-
-
-    public void CreateTransfer(Charge charge, long amount){
-        TransferCreateParams params =
-                TransferCreateParams.builder()
-                        .setCurrency("mxn")
+   public void createPaymentIntent(String paymentMethod, PriceService priceService, Dentist dentist){
+        long amount = (long) (priceService.getPrice()*100);
+        long applicationFee = (long) (priceService.getPrice()*0.1*100);
+        PaymentIntentCreateParams params =
+                PaymentIntentCreateParams.builder()
                         .setAmount(amount)
-                        .setSourceTransaction(charge.getId())
+                        .setCurrency("mxn")
+                        .addPaymentMethodType("card")
+                        .setPaymentMethod(paymentMethod)
+                        .setAutomaticPaymentMethods(PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                .setEnabled(true)
+                                .build())
+                        .setApplicationFeeAmount(applicationFee)
+                        .setTransferData(PaymentIntentCreateParams.TransferData.builder()
+                                .setDestination(dentist.getAccountStripeId())
+                                .build())
                         .build();
-
+        PaymentIntent paymentIntent;
         try {
-            Transfer.create(params);
+            paymentIntent = stripeConfig.getStripeClient().paymentIntents().create(params);
         } catch (StripeException e) {
-            throw new RuntimeException("Error al crear la transferencia en Stripe"+ e.getMessage());
-
+            throw new RuntimeException("Error al crear el intento de pago en Stripe");
         }
-
-    }
+   }
 
     public String createAccountStripeConnect(Dentist dentist){
         AccountCreateParams params =
@@ -96,7 +73,7 @@ public class StripeServices {
         Account account;
 
         try {
-            account=Account.create(params);
+            account=stripeConfig.getStripeClient().accounts().create(params);
         } catch (StripeException e) {
             throw new RuntimeException("Error al crear la cuenta en Stripe");
         }
@@ -113,7 +90,7 @@ public class StripeServices {
                         .build();
         AccountLink accountLink;
         try {
-            accountLink = AccountLink.create(params);
+            accountLink = stripeConfig.getStripeClient().accountLinks().create(params);
         } catch (StripeException e) {
             throw new RuntimeException("Error al crear el link de la cuenta en Stripe"+ e.getMessage());
         }
