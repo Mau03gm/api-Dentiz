@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StripeService {
+public class StripeSubscriptions {
 
     private final StripeRepository stripeRepository;
 
     private final StripeConfig stripeConfig;
 
     @Autowired
-    public StripeService(StripeRepository stripeRepository, StripeConfig stripeConfig) {
+    public StripeSubscriptions(StripeRepository stripeRepository, StripeConfig stripeConfig) {
         this.stripeRepository = stripeRepository;
         this.stripeConfig= stripeConfig;
 
@@ -137,9 +137,9 @@ public class StripeService {
         }
     }
 
-    public Boolean costumerSubscriptionIsActive(String subscriptionId) {
+    public boolean validateDentistSubscription(Dentist dentist) {
         try {
-            Subscription subscription = stripeConfig.getStripeClient().subscriptions().retrieve(subscriptionId);
+            Subscription subscription = stripeConfig.getStripeClient().subscriptions().retrieve(dentist.getDentistDetails().getSubscriptionId());
             return subscription.getStatus().equals("active");
         } catch (StripeException e) {
             throw new RuntimeException("Error al obtener el estado de la suscripción en Stripe");
@@ -149,7 +149,6 @@ public class StripeService {
     public Plan getPlan(String name) {
         return stripeRepository.findByName(name);
     }
-
 
 
 

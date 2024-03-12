@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
 import com.dentiz.dentizapi.Entity.*;
 import com.dentiz.dentizapi.Entity.DTO.AppointmentDTO;
 import com.dentiz.dentizapi.Entity.DTO.HoursDTO;
@@ -20,22 +21,32 @@ public class AppointmentService {
     private DentistService dentistService;
     private AppointmentRepository appointmentRepository;
     private ServicesService servicesService;
+    private StripeServices stripeServices;
+    private PriceServiceService priceServiceService;
 
     @Autowired
-    public AppointmentService(PatientService patientService, DentistService dentistService, AppointmentRepository appointmentRepository, ServicesService servicesService) {
+    public AppointmentService(PatientService patientService, DentistService dentistService, AppointmentRepository appointmentRepository, ServicesService servicesService, StripeServices stripeServices, PriceServiceService priceServiceService) {
         this.patientService = patientService;
         this.dentistService = dentistService;
         this.servicesService = servicesService;
         this.appointmentRepository = appointmentRepository;
+        this.stripeServices = stripeServices;
+        this.priceServiceService = priceServiceService;
     }
 
     public AppointmentDTO addAppointment(AppointmentDTO appointmentDTO, String username) throws Exception {
         Patient patient = new Patient(appointmentDTO);
         patient = patientService.checkPatient(patient);
-        ServiceEntity service = servicesService.getService(appointmentDTO.getServiceId());
+        ServiceEntity service = servicesService.getService(appointmentDTO.getServiceId());;
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        Appointment appointment = new Appointment(appointmentDTO, dentist.getDentistDetails(), patient, service);
-        appointment = appointmentRepository.save(appointment);
+        DentistDetails dentistDetails = dentist.getDentistDetails();
+        if (validateIfAppointmentExists(dentistDetails, appointmentDTO.getDate(), appointmentDTO.getHour())) {
+            throw new Exception("Ya existe una cita a esa hora");
+        }
+        Appointment appointment = new Appointment(appointmentDTO, dentistDetails, patient, service);
+        PriceService priceService =priceServiceService.getPriceService(service, dentistDetails);
+        stripeServices.createPaymentIntent(appointmentDTO.getPaymentMethod(), priceService, dentist  );
+        appointmentRepository.save(appointment);
         return appointmentDTO;
     }
 
@@ -99,5 +110,8 @@ public class AppointmentService {
         List<String> hoursDentist = new ArrayList<>(Arrays.asList(hours.getHours()));
         hoursDentist.removeAll(busyHours);
         return hoursDentist;
+    }
+    private boolean validateIfAppointmentExists(DentistDetails dentistDetails, LocalDate date, String hour) throws Exception {
+        return appointmentRepository.existsByDateAndDentistDetails( date, dentistDetails, hour);
     }
 }

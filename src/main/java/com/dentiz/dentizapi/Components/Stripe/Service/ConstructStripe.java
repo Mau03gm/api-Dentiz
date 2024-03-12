@@ -2,13 +2,10 @@ package com.dentiz.dentizapi.Components.Stripe.Service;
 
 import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.dentiz.dentizapi.Components.Stripe.Repository.StripeRepository;
-import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeService;
+import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeSubscriptions;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
-import java.math.BigDecimal;
 
 @Service
 public class ConstructStripe {
@@ -16,7 +13,7 @@ public class ConstructStripe {
     @Autowired
     private StripeRepository stripeRepository;
     @Autowired
-    private StripeService stripeService;
+    private StripeSubscriptions stripeSubscriptions;
 
     @PostConstruct
     public void init() {
@@ -27,7 +24,7 @@ public class ConstructStripe {
             plan.setPrice(50000L); // 500 pesos mexicanos en centavos
             plan.setCurrency("mxn");
             plan.setFreeTrialDays(14L);
-            stripeService.createPlan(plan);
+            stripeSubscriptions.createPlan(plan);
             stripeRepository.save(plan);
         }
     }

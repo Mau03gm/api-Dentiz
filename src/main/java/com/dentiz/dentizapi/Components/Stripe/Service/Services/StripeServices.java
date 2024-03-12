@@ -98,5 +98,23 @@ public class StripeServices {
         return  accountLink.getUrl();
     }
 
+    public String UpdateAccountLink(Dentist dentist){
+        AccountLinkCreateParams params =
+                AccountLinkCreateParams.builder()
+                        .setAccount(dentist.getAccountStripeId())
+                        .setRefreshUrl("http://localhost:3000")
+                        .setReturnUrl("http://localhost:3000")
+                        .setType(AccountLinkCreateParams.Type.ACCOUNT_UPDATE)
+                        .build();
+        AccountLink accountLink;
+        try {
+            accountLink = stripeConfig.getStripeClient().accountLinks().create(params);
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al crear el link de la cuenta en Stripe"+ e.getMessage());
+        }
+
+        return  accountLink.getUrl();
+    }
+
 
 }
