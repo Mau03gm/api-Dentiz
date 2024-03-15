@@ -27,7 +27,7 @@ public class Plan {
     @Column(name = "description")
     private String description;
     @Column(name = "price")
-    private BigDecimal price; // Monto en centavos
+    private Long price; // Monto en centavos
     @Column(name = "currency")
     private String currency; // Moneda (ej. "eur")
     @Column(name = "free_trial_days")

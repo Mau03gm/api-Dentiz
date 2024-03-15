@@ -60,7 +60,6 @@ public class PriceServiceService {
         return priceServices.stream().map(serviceDTO::priceServiceToDTO).toList();
     }
 
-
     public ServiceDTO getPriceServiceFromDentist( ServiceEntity service, DentistDetails dentistDetails) throws Exception {
         PriceService priceService = priceServiceRepository.findByServiceAndDentistDetails(service, dentistDetails);
         if(priceService == null) {
@@ -68,4 +67,13 @@ public class PriceServiceService {
         }
         return new ServiceDTO().priceServiceToDTO(priceService);
     }
+
+    public PriceService getPriceService(ServiceEntity service, DentistDetails dentistDetails) throws Exception {
+        PriceService priceService = priceServiceRepository.findByServiceAndDentistDetails(service, dentistDetails);
+        if(priceService == null) {
+            throw new Exception("PriceService not found");
+        }
+        return priceService;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.dentiz.dentizapi.Components.Stripe.Service;
+package com.dentiz.dentizapi.Components.Stripe.Service.Subscription;
 
 import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.dentiz.dentizapi.Components.Stripe.Repository.StripeRepository;
@@ -6,24 +6,59 @@ import com.dentiz.dentizapi.Components.Stripe.StripeConfig;
 import com.dentiz.dentizapi.Entity.Dentist;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
+import com.stripe.model.Product;
 import com.stripe.model.Subscription;
 import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StripeService {
+public class StripeSubscriptions {
 
     private final StripeRepository stripeRepository;
 
     private final StripeConfig stripeConfig;
 
     @Autowired
-    public StripeService(StripeRepository stripeRepository, StripeConfig stripeConfig) {
+    public StripeSubscriptions(StripeRepository stripeRepository, StripeConfig stripeConfig) {
         this.stripeRepository = stripeRepository;
         this.stripeConfig= stripeConfig;
 
     }
+
+    public void createPlan(Plan plan) {
+        ProductCreateParams productParams = ProductCreateParams.builder()
+                .setName(plan.getName())
+                .build();
+
+        Product product;
+        try {
+            product = stripeConfig.getStripeClient().products().create(productParams);
+            plan.setStripeId(product.getId());
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al crear el producto en Stripe");
+        }
+
+
+        PriceCreateParams priceParams = PriceCreateParams.builder()
+                .setProduct(product.getId())
+                .setCurrency("mxn")
+                .setUnitAmount(plan.getPrice())
+                .setRecurring(PriceCreateParams.Recurring.builder()
+                        .setInterval(PriceCreateParams.Recurring.Interval.MONTH)
+                        .build())
+                .setProduct(product.getId())
+                .build();
+
+        try {
+            com.stripe.model.Price price = stripeConfig.getStripeClient().prices().create(priceParams);
+            plan.setSubscriptionId(price.getId());
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al crear el precio en Stripe");
+        }
+    }
+
+
 
     public String createCostumer(Dentist dentist, String token) {
         CustomerCreateParams customerParams = CustomerCreateParams.builder()
@@ -61,11 +96,15 @@ public class StripeService {
         }
     }
 
-    public String createCostumerSubscription(String costumerId, Plan plan) {
+    public String createCostumerSubscription(String costumerId, Plan plan, String token) {
         SubscriptionCreateParams subscriptionParams = SubscriptionCreateParams.builder()
                 .setCustomer(costumerId)
-                .addItem(SubscriptionCreateParams.Item.builder().setPlan(plan.getStripeId()).build())
+                .setDefaultPaymentMethod(token)
+                .addItem(
+                        SubscriptionCreateParams.Item.builder().setPlan(plan.getSubscriptionId()).build()
+                )
                 .setTrialPeriodDays(plan.getFreeTrialDays())
+
                 .build();
         Subscription subscription= null;
         try {
@@ -98,8 +137,19 @@ public class StripeService {
         }
     }
 
+    public boolean validateDentistSubscription(Dentist dentist) {
+        try {
+            Subscription subscription = stripeConfig.getStripeClient().subscriptions().retrieve(dentist.getDentistDetails().getSubscriptionId());
+            return subscription.getStatus().equals("active");
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al obtener el estado de la suscripción en Stripe");
+        }
+    }
+
     public Plan getPlan(String name) {
         return stripeRepository.findByName(name);
     }
+
+
 
 }

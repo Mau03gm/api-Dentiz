@@ -43,6 +43,9 @@ public class Dentist {
     @Column (name = "description", nullable = true, length = 255)
     private String description;
 
+    @Column (name = "account_stripe_id", nullable = true)
+    private String accountStripeId;
+
     @OneToOne(mappedBy = "dentist", fetch = FetchType.LAZY)
     private DentistDetails dentistDetails;
 

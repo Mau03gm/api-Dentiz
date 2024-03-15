@@ -18,4 +18,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment a WHERE a.dentistDetails = ?1 AND YEAR(a.date) = ?2 AND MONTH(a.date) = ?3")
     List<Appointment> findByDentistDetailsAndYearAndMonth(DentistDetails dentistDetails, int year, int month);
+
+    boolean existsByDateAndDentistDetailsAndHour(LocalDate date, DentistDetails dentistDetails, String hour);
 }

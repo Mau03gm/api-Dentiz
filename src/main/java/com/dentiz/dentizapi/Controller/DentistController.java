@@ -2,6 +2,7 @@ package com.dentiz.dentizapi.Controller;
 
 import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
+import com.dentiz.dentizapi.Entity.DTO.StripeAccount;
 import com.dentiz.dentizapi.Entity.Dentist;
 import com.dentiz.dentizapi.Service.DentistDetailsService;
 import com.dentiz.dentizapi.Service.DentistService;
@@ -34,6 +35,11 @@ public class DentistController {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         dentistDetailsService.addDentistToDentistDetails(dentist, paymentMethod);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/stripeAccount/{username}")
+    public ResponseEntity<StripeAccount> setStripeAccount(@PathVariable String username) throws Exception{
+        return ResponseEntity.ok().body(dentistService.StripeConnectAccount(username));
     }
 
 }

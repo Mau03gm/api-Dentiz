@@ -1,15 +1,16 @@
 package com.dentiz.dentizapi.Service;
 
-import com.dentiz.dentizapi.Components.Stripe.Service.StripeService;
+import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
+import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeSubscriptions;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
 import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
+import com.dentiz.dentizapi.Entity.DTO.StripeAccount;
 import com.dentiz.dentizapi.Entity.Dentist;
 import com.dentiz.dentizapi.Repository.DentistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class DentistService {
@@ -22,7 +23,10 @@ public class DentistService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private StripeService stripeService;
+    private StripeSubscriptions stripeSubscriptions;
+
+    @Autowired
+    private StripeServices stripeServices;
 
     public RegisterDentistDTO registerDentist(RegisterDentistDTO dentistDTO) throws Exception {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
@@ -48,9 +52,24 @@ public class DentistService {
     public Dentist validateIfDentistExists(String username, String email) throws Exception {
         Dentist dentist = dentistRepository.findByUsernameOrEmail(username, email);
         if (dentist==null) {
-            throw new Exception("Dentista no encontrado");
+            throw new UsernameNotFoundException("Dentist not found");
+        }
+        if(!stripeSubscriptions.validateDentistSubscription(dentist)){
+            throw new Exception("Dentista no tiene suscripción");
         }
         return dentist;
+    }
+
+    public StripeAccount StripeConnectAccount(String username) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        if(dentist.getAccountStripeId()!=null){
+            return new StripeAccount(stripeServices.createAccountLink(dentist));
+        }
+        String accountStripeId= stripeServices.createAccountStripeConnect(dentist);
+        dentist.setAccountStripeId(accountStripeId);
+        String accountStripeLink = stripeServices.createAccountLink(dentist);
+        dentistRepository.save(dentist);
+        return new StripeAccount(accountStripeLink);
     }
 
     private void validateIfDentistAlreadyExists(String username, String email) throws Exception {
@@ -70,8 +89,8 @@ public class DentistService {
     public void deleteDentist(String username) throws Exception {
         Dentist dentist = validateIfDentistExists(username, username);
         //dentistDetailsService.deleteDentistDetails(dentist);
-        stripeService.deleteCostumerSubscription(dentist.getDentistDetails().getSubscriptionId());
-        stripeService.deleteCostumer(dentist.getDentistDetails().getCostumerId());
+        stripeSubscriptions.deleteCostumerSubscription(dentist.getDentistDetails().getSubscriptionId());
+        stripeSubscriptions.deleteCostumer(dentist.getDentistDetails().getCostumerId());
         dentistRepository.delete(dentist);
     }
 }
