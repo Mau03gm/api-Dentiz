@@ -16,15 +16,11 @@ public class StripeServices {
     private final StripeRepository stripeRepository;
     private final StripeConfig stripeConfig;
 
-    @Value("stripe.stripe-id")
-    private String PLATFORM_ACCOUNT_ID ;
-
     @Autowired
     public StripeServices(StripeRepository stripeRepository, StripeConfig stripeConfig) {
         this.stripeRepository = stripeRepository;
         this.stripeConfig= stripeConfig;
     }
-
 
    public void createPaymentIntent(String paymentMethod, PriceService priceService, Dentist dentist){
         long amount = (long) (priceService.getPrice()*100);
