@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class AppointmentService {
 
-
     private PatientService patientService;
     private DentistService dentistService;
     private AppointmentRepository appointmentRepository;
@@ -41,7 +40,7 @@ public class AppointmentService {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         DentistDetails dentistDetails = dentist.getDentistDetails();
         if (validateIfAppointmentExists(dentistDetails, appointmentDTO.getDate(), appointmentDTO.getHour())) {
-            throw new Exception("Ya existe una cita a esa hora");
+            throw new Exception("Appointment already exists");
         }
         Appointment appointment = new Appointment(appointmentDTO, dentistDetails, patient, service);
         PriceService priceService =priceServiceService.getPriceService(service, dentistDetails);
@@ -91,7 +90,6 @@ public class AppointmentService {
         return HoursDTO.builder().hours(hoursDentist.toArray(String[]::new)).build();
     }
 
-
     public List<AppointmentDTO> getAppointmentsByDateAndDentist(String username, LocalDate date) throws Exception {
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         List<Appointment> appointments = appointmentRepository.findAppointmentsByDentistDetailsAndDate(dentist.getDentistDetails(), date);
@@ -111,7 +109,9 @@ public class AppointmentService {
         hoursDentist.removeAll(busyHours);
         return hoursDentist;
     }
+
     private boolean validateIfAppointmentExists(DentistDetails dentistDetails, LocalDate date, String hour) throws Exception {
-        return appointmentRepository.existsByDateAndDentistDetails( date, dentistDetails, hour);
+        return appointmentRepository.existsByDateAndDentistDetailsAndHour( date, dentistDetails, hour);
     }
+
 }
