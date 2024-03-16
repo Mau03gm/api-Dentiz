@@ -29,11 +29,12 @@ public class StripeServices {
    public void createPaymentIntent(String paymentMethod, PriceService priceService, Dentist dentist){
         long amount = (long) (priceService.getPrice()*100);
         long applicationFee = (long) (priceService.getPrice()*0.1*100);
+       System.out.println("amount: "+amount);
+         System.out.println("applicationFee: "+applicationFee);
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
                         .setAmount(amount)
                         .setCurrency("mxn")
-                        .addPaymentMethodType("card")
                         .setPaymentMethod(paymentMethod)
                         .setAutomaticPaymentMethods(PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
                                 .setEnabled(true)
@@ -47,7 +48,7 @@ public class StripeServices {
         try {
             paymentIntent = stripeConfig.getStripeClient().paymentIntents().create(params);
         } catch (StripeException e) {
-            throw new RuntimeException("Error al crear el intento de pago en Stripe");
+            throw new RuntimeException("Error al crear el intento de pago en Stripe"+ e.getMessage());
         }
    }
 
