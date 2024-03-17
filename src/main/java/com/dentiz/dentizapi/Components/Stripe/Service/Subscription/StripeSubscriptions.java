@@ -137,13 +137,17 @@ public class StripeSubscriptions {
         }
     }
 
-    public boolean validateDentistSubscription(Dentist dentist) {
-        try {
+    public boolean validateDentistSubscription(Dentist dentist) throws StripeException {
+        String state;
             Subscription subscription = stripeConfig.getStripeClient().subscriptions().retrieve(dentist.getDentistDetails().getSubscriptionId());
-            return subscription.getStatus().equals("active");
-        } catch (StripeException e) {
-            throw new RuntimeException("Error al obtener el estado de la suscripción en Stripe");
-        }
+            if(subscription.getStatus().equals("active")) {
+                return true;
+            } else if (subscription.getStatus().equals("trialing")) {
+                return true;
+            } else {
+                return false;
+            }
+
     }
 
     public Plan getPlan(String name) {

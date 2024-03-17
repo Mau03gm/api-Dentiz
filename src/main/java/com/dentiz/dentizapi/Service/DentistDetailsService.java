@@ -29,7 +29,8 @@ public class DentistDetailsService {
     }
 
     public void addHoursToDentistDetails(Hour hour, Dentist dentist) {
-        dentist.getDentistDetails().setHour(hour);
-        dentistDetailsRepository.save(dentist.getDentistDetails());
+         DentistDetails dentistDetails= dentist.getDentistDetails();
+            dentistDetails.setHour(hour);
+        dentistDetailsRepository.save(dentistDetails);
     }
 }
