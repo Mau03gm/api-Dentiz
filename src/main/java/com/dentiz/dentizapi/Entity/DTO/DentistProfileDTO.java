@@ -19,7 +19,7 @@ public class DentistProfileDTO {
     @Nullable
     private String photoProfileUrl;
     @Nullable
-    private MultipartFile multipartFile;
+    private MultipartFile file;
 
     public DentistProfileDTO(Dentist dentist) {
         this.username = dentist.getUsername();
