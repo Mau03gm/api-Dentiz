@@ -103,7 +103,7 @@ public class DentistService {
 
     public DentistProfileDTO addImageToDentist(String username, MultipartFile file) throws Exception {
         Dentist dentist = validateIfDentistExists(username, username);
-        BucketObject bucketObject = s3DataSource.uploadFile(file);
+         BucketObject bucketObject = s3DataSource.uploadFile(file);
         dentist.setURLImage(bucketObject.getFileName());
         return new DentistProfileDTO(dentistRepository.save(dentist));
     }
