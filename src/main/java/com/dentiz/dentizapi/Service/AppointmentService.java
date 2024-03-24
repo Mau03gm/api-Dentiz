@@ -36,11 +36,11 @@ public class AppointmentService {
         this.appointmentRepository = appointmentRepository;
         this.stripeServices = stripeServices;
         this.priceServiceService = priceServiceService;
+        this.mailService = mailService;
     }
 
     public AppointmentDTO addAppointment(AppointmentDTO appointmentDTO, String username) throws Exception {
-        Patient patient = new Patient(appointmentDTO);
-        patient = patientService.checkPatient(patient);
+        Patient patient = patientService.checkPatient(appointmentDTO);
         ServiceEntity service = servicesService.getService(appointmentDTO.getServiceId());;
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         DentistDetails dentistDetails = dentist.getDentistDetails();
@@ -55,8 +55,8 @@ public class AppointmentService {
                 .subject("Cita creada")
                 .body("Tiene una cita programada para el dia " + appointmentDTO.getDate() + " a las " + appointmentDTO.getHour())
                 .build();
-        mailService.sendMail(patient.getEmail(), mailStructure);
         mailService.sendMail(dentist.getEmail(), mailStructure);
+        mailService.sendMail(patient.getEmail(), mailStructure);
         return appointmentDTO;
     }
 
