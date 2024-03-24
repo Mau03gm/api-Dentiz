@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.amazonaws.services.s3.model.Bucket;
 import com.dentiz.dentizapi.Components.Images.DataSource.BucketObject;
 import com.dentiz.dentizapi.Components.Images.DataSource.S3DataSource;
@@ -44,13 +45,17 @@ public class DentistService {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
         Dentist dentist= new Dentist(dentistDTO);
         dentist.setPassword(passwordEncoder.encode(dentistDTO.getPassword()));
+        String paymentMethod= dentistDTO.getPaymentMethod();
+        String costumerId= stripeSubscriptions.createCostumer(dentist, paymentMethod);
+        Plan plan = stripeSubscriptions.getPlan("Basic");
+        String subscriptionId= stripeSubscriptions.createCostumerSubscription(costumerId,plan ,paymentMethod);
         dentistRepository.save(dentist);
-        dentistDetailsService.addDentistToDentistDetails(dentist, dentistDTO.getPaymentMethod());
         MailStructure mailStructure = MailStructure.builder()
                 .subject("Bienvenido a Dentiz")
                 .body("Bienvenido a Dentiz, su cuenta ha sido creada con éxito")
                 .build();
         mailService.sendMail(dentistDTO.getEmail(), mailStructure);
+        dentistDetailsService.addDentistToDentistDetails(dentist, costumerId, plan, subscriptionId);
         return dentistDTO;
     }
 

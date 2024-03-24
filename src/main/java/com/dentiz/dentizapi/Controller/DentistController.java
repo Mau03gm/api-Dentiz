@@ -40,7 +40,7 @@ public class DentistController {
     @PostMapping("/addPaymentMethod/{username}")
     public ResponseEntity<Void> addPaymentMethod(@RequestBody String paymentMethod, @PathVariable String username) throws Exception{
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        dentistDetailsService.addDentistToDentistDetails(dentist, paymentMethod);
+        //dentistDetailsService.addDentistToDentistDetails(dentist, paymentMethod);
         return ResponseEntity.ok().build();
     }
 
