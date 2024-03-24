@@ -1,6 +1,12 @@
 package com.dentiz.dentizapi.Service;
 
+<<<<<<< HEAD
 import com.dentiz.dentizapi.Components.Stripe.Plan;
+=======
+import com.amazonaws.services.s3.model.Bucket;
+import com.dentiz.dentizapi.Components.Images.DataSource.BucketObject;
+import com.dentiz.dentizapi.Components.Images.DataSource.S3DataSource;
+>>>>>>> b698e484c256f3d67faa98b260b7ad6eee012945
 import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
 import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeSubscriptions;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
@@ -12,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class DentistService {
@@ -28,6 +35,9 @@ public class DentistService {
 
     @Autowired
     private StripeServices stripeServices;
+
+    @Autowired
+    private S3DataSource s3DataSource;
 
     public RegisterDentistDTO registerDentist(RegisterDentistDTO dentistDTO) throws Exception {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
@@ -97,5 +107,12 @@ public class DentistService {
         stripeSubscriptions.deleteCostumerSubscription(dentist.getDentistDetails().getSubscriptionId());
         stripeSubscriptions.deleteCostumer(dentist.getDentistDetails().getCostumerId());
         dentistRepository.delete(dentist);
+    }
+
+    public DentistProfileDTO addImageToDentist(String username, MultipartFile file) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+         BucketObject bucketObject = s3DataSource.uploadFile(file);
+        dentist.setURLImage(bucketObject.getFileName());
+        return new DentistProfileDTO(dentistRepository.save(dentist));
     }
 }

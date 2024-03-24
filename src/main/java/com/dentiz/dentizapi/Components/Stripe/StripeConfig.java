@@ -13,7 +13,10 @@ public class StripeConfig {
     @Value("${stripe.secret-key}")
     private String secretKey;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b698e484c256f3d67faa98b260b7ad6eee012945
     public StripeClient getStripeClient() {
         return new StripeClient(
                 secretKey

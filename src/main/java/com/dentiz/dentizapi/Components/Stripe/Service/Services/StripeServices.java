@@ -24,7 +24,6 @@ public class StripeServices {
         this.stripeConfig= stripeConfig;
     }
 
-
    public void createPaymentIntent(String paymentMethod, PriceService priceService, Dentist dentist){
        Stripe.apiKey = stripeConfig.getSecretKey();
         long amount = (long) (priceService.getPrice()*100);
