@@ -14,17 +14,13 @@ public class DentistDetailsService {
 
     @Autowired
     private DentistDetailsRepository dentistDetailsRepository;
-    @Autowired
-    private StripeSubscriptions stripeSubscriptions;
 
 
-
-    public void addDentistToDentistDetails(Dentist dentist, String token) {
+    public void addDentistToDentistDetails(Dentist dentist, String costumerId, Plan plan, String subscriptionId) {
         DentistDetails dentistDetails = new DentistDetails();
         dentistDetails.setDentist(dentist);
-        dentistDetails.setCostumerId( stripeSubscriptions.createCostumer(dentist, token));
-       Plan plan = stripeSubscriptions.getPlan("Basic");
-       dentistDetails.setSubscriptionId(stripeSubscriptions.createCostumerSubscription(dentistDetails.getCostumerId(),plan ,token));
+        dentistDetails.setCostumerId( costumerId);
+       dentistDetails.setSubscriptionId(subscriptionId);
         dentistDetailsRepository.save(dentistDetails);
     }
 

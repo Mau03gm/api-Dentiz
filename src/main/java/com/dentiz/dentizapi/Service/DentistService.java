@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
 import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeSubscriptions;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
@@ -32,8 +33,12 @@ public class DentistService {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
         Dentist dentist= new Dentist(dentistDTO);
         dentist.setPassword(passwordEncoder.encode(dentistDTO.getPassword()));
+        String paymentMethod= dentistDTO.getPaymentMethod();
+        String costumerId= stripeSubscriptions.createCostumer(dentist, paymentMethod);
+        Plan plan = stripeSubscriptions.getPlan("Basic");
+        String subscriptionId= stripeSubscriptions.createCostumerSubscription(costumerId,plan ,paymentMethod);
         dentistRepository.save(dentist);
-        dentistDetailsService.addDentistToDentistDetails(dentist, dentistDTO.getPaymentMethod());
+        dentistDetailsService.addDentistToDentistDetails(dentist, costumerId, plan, subscriptionId);
         return dentistDTO;
     }
 
