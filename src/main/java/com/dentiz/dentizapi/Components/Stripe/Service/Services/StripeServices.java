@@ -132,5 +132,19 @@ public class StripeServices {
         return  accountLink.getUrl();
     }
 
+    public String loginDashboardLink(Dentist dentist){
+        LoginLinkCreateOnAccountParams params =
+                LoginLinkCreateOnAccountParams.builder()
+                        .build();
+        LoginLink loginLink;
+        try {
+            loginLink = stripeConfig.getStripeClient().accounts().loginLinks().create(dentist.getAccountStripeId());
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al crear el link de la cuenta en Stripe"+ e.getMessage());
+        }
+
+        return  loginLink.getUrl();
+    }
+
 
 }

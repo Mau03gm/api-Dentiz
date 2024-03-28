@@ -49,4 +49,9 @@ public class DentistController {
         return ResponseEntity.ok().body(dentistService.StripeConnectAccount(username));
     }
 
+    @GetMapping("/stripeAccount/{username}/dashboard")
+    public ResponseEntity<String> getStripeDashboard(@PathVariable String username) throws Exception{
+        return ResponseEntity.ok().body(dentistService.getDashboardLink(username));
+    }
+
 }

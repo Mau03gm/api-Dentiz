@@ -111,4 +111,9 @@ public class DentistService {
         dentist.setURLImage(bucketObject.getFileName());
         return new DentistProfileDTO(dentistRepository.save(dentist));
     }
+
+    public String getDashboardLink(String username) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        return stripeServices.loginDashboardLink(dentist);
+    }
 }
