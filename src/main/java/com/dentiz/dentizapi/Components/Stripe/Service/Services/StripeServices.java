@@ -8,6 +8,7 @@ import com.dentiz.dentizapi.Entity.PriceService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
+import com.stripe.net.RequestOptions;
 import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,6 +63,7 @@ public class StripeServices {
        PaymentIntent confirmPaymentIntent;
        try {
            confirmPaymentIntent = stripeConfig.getStripeClient().paymentIntents().confirm(paymentIntentConfirm.getId(), params);
+          // payoutToDentist(dentist, confirmPaymentIntent.getAmount());
        } catch (StripeException e) {
            throw new RuntimeException("Error al confirmar el intento de pago en Stripe" + e.getMessage());
        }
@@ -146,5 +148,25 @@ public class StripeServices {
         return  loginLink.getUrl();
     }
 
+    public void payoutToDentist(Dentist dentist, long amount){
+        Stripe.apiKey = stripeConfig.getSecretKey();
+
+        PayoutCreateParams params =
+                PayoutCreateParams.builder()
+                        .setAmount(amount)
+                        .setCurrency("mxn")
+                        .build();
+
+        RequestOptions requestOptions = RequestOptions.builder()
+                .setStripeAccount(dentist.getAccountStripeId())
+                .build();
+
+        try {
+            Payout payout = Payout.create(params, requestOptions);
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al realizar el pago en Stripe "+ e.getMessage());
+        }
+
+    }
 
 }
