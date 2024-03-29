@@ -1,5 +1,7 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Components.Mails.MailService.MailService;
+import com.dentiz.dentizapi.Components.Mails.MailStructure;
 import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
 import com.dentiz.dentizapi.Entity.*;
 import com.dentiz.dentizapi.Entity.DTO.AppointmentDTO;
@@ -22,20 +24,23 @@ public class AppointmentService {
     private ServicesService servicesService;
     private StripeServices stripeServices;
     private PriceServiceService priceServiceService;
+    private MailService mailService;
 
     @Autowired
-    public AppointmentService(PatientService patientService, DentistService dentistService, AppointmentRepository appointmentRepository, ServicesService servicesService, StripeServices stripeServices, PriceServiceService priceServiceService) {
+    public AppointmentService(PatientService patientService, DentistService dentistService, AppointmentRepository appointmentRepository,
+                              ServicesService servicesService, StripeServices stripeServices, PriceServiceService priceServiceService,
+                              MailService mailService) {
         this.patientService = patientService;
         this.dentistService = dentistService;
         this.servicesService = servicesService;
         this.appointmentRepository = appointmentRepository;
         this.stripeServices = stripeServices;
         this.priceServiceService = priceServiceService;
+        this.mailService = mailService;
     }
 
     public AppointmentDTO addAppointment(AppointmentDTO appointmentDTO, String username) throws Exception {
-        Patient patient = new Patient(appointmentDTO);
-        patient = patientService.checkPatient(patient);
+        Patient patient = patientService.checkPatient(appointmentDTO);
         ServiceEntity service = servicesService.getService(appointmentDTO.getServiceId());;
         Dentist dentist = dentistService.validateIfDentistExists(username, username);
         DentistDetails dentistDetails = dentist.getDentistDetails();
@@ -46,6 +51,12 @@ public class AppointmentService {
         PriceService priceService =priceServiceService.getPriceService(service, dentistDetails);
         stripeServices.createPaymentIntent(appointmentDTO.getPaymentMethod(), priceService, dentist  );
         appointmentRepository.save(appointment);
+        MailStructure mailStructure = MailStructure.builder()
+                .subject("Cita creada")
+                .body("Tiene una cita programada para el dia " + appointmentDTO.getDate() + " a las " + appointmentDTO.getHour())
+                .build();
+        mailService.sendMail(dentist.getEmail(), mailStructure);
+        mailService.sendMail(patient.getEmail(), mailStructure);
         return appointmentDTO;
     }
 

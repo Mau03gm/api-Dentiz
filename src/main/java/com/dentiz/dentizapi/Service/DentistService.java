@@ -3,6 +3,8 @@ package com.dentiz.dentizapi.Service;
 import com.dentiz.dentizapi.Components.Stripe.Plan;
 import com.dentiz.dentizapi.Components.Images.DataSource.BucketObject;
 import com.dentiz.dentizapi.Components.Images.DataSource.S3DataSource;
+import com.dentiz.dentizapi.Components.Mails.MailService.MailService;
+import com.dentiz.dentizapi.Components.Mails.MailStructure;
 import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
 import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeSubscriptions;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
@@ -35,6 +37,9 @@ public class DentistService {
     @Autowired
     private S3DataSource s3DataSource;
 
+    @Autowired
+    private MailService mailService;
+
     public RegisterDentistDTO registerDentist(RegisterDentistDTO dentistDTO) throws Exception {
         validateIfDentistAlreadyExists(dentistDTO.getUsername(), dentistDTO.getEmail());
         Dentist dentist= new Dentist(dentistDTO);
@@ -44,6 +49,11 @@ public class DentistService {
         Plan plan = stripeSubscriptions.getPlan("Basic");
         String subscriptionId= stripeSubscriptions.createCostumerSubscription(costumerId,plan ,paymentMethod);
         dentistRepository.save(dentist);
+        MailStructure mailStructure = MailStructure.builder()
+                .subject("Bienvenido a Dentiz")
+                .body("Bienvenido a Dentiz, su cuenta ha sido creada con éxito")
+                .build();
+        mailService.sendMail(dentistDTO.getEmail(), mailStructure);
         dentistDetailsService.addDentistToDentistDetails(dentist, costumerId, plan, subscriptionId);
         return dentistDTO;
     }

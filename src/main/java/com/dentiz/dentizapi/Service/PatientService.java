@@ -1,5 +1,6 @@
 package com.dentiz.dentizapi.Service;
 
+import com.dentiz.dentizapi.Entity.DTO.AppointmentDTO;
 import com.dentiz.dentizapi.Entity.Patient;
 import com.dentiz.dentizapi.Repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,10 @@ public class PatientService {
         return patientRepository.findById(id).orElse(null);
     }
 
-    public Patient checkPatient(Patient patient) {
-       Patient patientFound = patientRepository.findByEmail(patient.getEmail());
+    public Patient checkPatient(AppointmentDTO appointmentDTO) {
+       Patient patientFound = patientRepository.findByEmail(appointmentDTO.getPatientEmail());
         if (patientFound == null) {
+            Patient patient = new Patient(appointmentDTO);
            return addPatient(patient);
         }
         return patientFound;

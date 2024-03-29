@@ -28,8 +28,8 @@ public class StripeServices {
        Stripe.apiKey = stripeConfig.getSecretKey();
         long amount = (long) (priceService.getPrice()*100);
         long applicationFee = (long) (priceService.getPrice()*0.1*100);
-       System.out.println("amount: "+amount);
-         System.out.println("applicationFee: "+applicationFee);
+        long transferAmount = amount - applicationFee;
+       System.out.println(dentist.getAccountStripeId());
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
                         .setAmount(amount)
