@@ -1,16 +1,10 @@
 package com.dentiz.dentizapi.Service;
 
 import com.dentiz.dentizapi.Components.Stripe.Plan;
-<<<<<<< HEAD
-import com.amazonaws.services.s3.model.Bucket;
 import com.dentiz.dentizapi.Components.Images.DataSource.BucketObject;
 import com.dentiz.dentizapi.Components.Images.DataSource.S3DataSource;
 import com.dentiz.dentizapi.Components.Mails.MailService.MailService;
 import com.dentiz.dentizapi.Components.Mails.MailStructure;
-=======
-import com.dentiz.dentizapi.Components.Images.DataSource.BucketObject;
-import com.dentiz.dentizapi.Components.Images.DataSource.S3DataSource;
->>>>>>> 7a4a9b153a919cb61a95cdd9b830b326aefdb251
 import com.dentiz.dentizapi.Components.Stripe.Service.Services.StripeServices;
 import com.dentiz.dentizapi.Components.Stripe.Service.Subscription.StripeSubscriptions;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
