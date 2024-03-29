@@ -168,5 +168,14 @@ public class StripeServices {
         }
 
     }
+    public String getConnectAccountStatus(Dentist dentist){
+        Account account;
+        try {
+            account = stripeConfig.getStripeClient().accounts().retrieve(dentist.getAccountStripeId());
+        } catch (StripeException e) {
+            throw new RuntimeException("Error al obtener el estado de la cuenta en Stripe"+ e.getMessage());
+        }
+        return account.getCapabilities().getTransfers();
+    }
 
 }
