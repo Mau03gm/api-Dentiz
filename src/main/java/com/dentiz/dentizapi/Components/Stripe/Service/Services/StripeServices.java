@@ -47,7 +47,9 @@ public class StripeServices {
         PaymentIntent paymentIntent;
         try {
             paymentIntent = stripeConfig.getStripeClient().paymentIntents().create(params);
-            confirmPaymentIntent(paymentIntent, dentist);
+            paymentIntent.confirm();
+            transferToDentist(dentist, transferAmount);
+            //confirmPaymentIntent(paymentIntent, dentist);
         } catch (StripeException e) {
             throw new RuntimeException("Error al crear el intento de pago en Stripe"+ e.getMessage());
         }
@@ -68,6 +70,21 @@ public class StripeServices {
            throw new RuntimeException("Error al confirmar el intento de pago en Stripe" + e.getMessage());
        }
    }
+
+   private void transferToDentist(Dentist dentist, long amount){
+       Stripe.apiKey = stripeConfig.getSecretKey();
+       TransferCreateParams params =
+               TransferCreateParams.builder()
+                       .setAmount(amount)
+                       .setCurrency("mxn")
+                       .setDestination(dentist.getAccountStripeId())
+                       .build();
+       Transfer transfer;
+       try {
+           transfer = Transfer.create(params);
+       } catch (StripeException e) {
+           throw new RuntimeException("Error al realizar la transferencia en Stripe "+ e.getMessage());
+       }
 
     public String createAccountStripeConnect(Dentist dentist){
         AccountCreateParams params =
