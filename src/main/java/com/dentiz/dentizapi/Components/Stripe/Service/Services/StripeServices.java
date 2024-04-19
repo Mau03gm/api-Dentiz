@@ -28,7 +28,7 @@ public class StripeServices {
    public void createPaymentIntent(String paymentMethod, PriceService priceService, Dentist dentist){
        Stripe.apiKey = stripeConfig.getSecretKey();
         long amount = (long) (priceService.getPrice()*100);
-        long applicationFee = (long) (priceService.getPrice()*0.1*100);
+        long applicationFee = amount * 10 / 100;
         long transferAmount = amount - applicationFee;
        System.out.println(dentist.getAccountStripeId());
         PaymentIntentCreateParams params =
@@ -71,7 +71,7 @@ public class StripeServices {
        }
    }
 
-   private void transferToDentist(Dentist dentist, long amount){
+   private void transferToDentist(Dentist dentist, long amount) {
        Stripe.apiKey = stripeConfig.getSecretKey();
        TransferCreateParams params =
                TransferCreateParams.builder()
@@ -83,8 +83,9 @@ public class StripeServices {
        try {
            transfer = Transfer.create(params);
        } catch (StripeException e) {
-           throw new RuntimeException("Error al realizar la transferencia en Stripe "+ e.getMessage());
+           throw new RuntimeException("Error al realizar la transferencia en Stripe " + e.getMessage());
        }
+   }
 
     public String createAccountStripeConnect(Dentist dentist){
         AccountCreateParams params =
