@@ -55,7 +55,7 @@ public class DentistController {
     }
 
     @GetMapping("/stripeAccount/{username}/status")
-    public ResponseEntity<String> getStripeAccountStatus(@PathVariable String username) throws Exception{
+    public ResponseEntity<Boolean> getStripeAccountStatus(@PathVariable String username) throws Exception{
         return ResponseEntity.ok().body(dentistService.getConnectAccountStatus(username));
     }
 

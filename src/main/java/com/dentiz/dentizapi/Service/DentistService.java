@@ -129,7 +129,7 @@ public class DentistService {
         return stripeServices.loginDashboardLink(dentist);
     }
 
-    public String getConnectAccountStatus(String username) throws Exception {
+    public Boolean getConnectAccountStatus(String username) throws Exception {
         Dentist dentist = validateIfDentistExists(username, username);
         return stripeServices.getConnectAccountStatus(dentist);
     }
