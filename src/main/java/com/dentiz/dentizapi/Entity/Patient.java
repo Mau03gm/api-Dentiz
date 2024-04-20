@@ -22,7 +22,7 @@ public class Patient {
     @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
 
-    @Column(name = "phone", nullable = true, unique = true, length = 15)
+    @Column(name = "phone", nullable = true, unique = false, length = 15)
     private String phone;
 
     public Patient(AppointmentDTO appointmentDTO) {

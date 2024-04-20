@@ -12,6 +12,8 @@ import com.dentiz.dentizapi.Entity.DTO.RegisterDentistDTO;
 import com.dentiz.dentizapi.Entity.DTO.StripeAccount;
 import com.dentiz.dentizapi.Entity.Dentist;
 import com.dentiz.dentizapi.Repository.DentistRepository;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -121,4 +123,16 @@ public class DentistService {
         dentist.setURLImage(bucketObject.getFileName());
         return new DentistProfileDTO(dentistRepository.save(dentist));
     }
+
+    public String getDashboardLink(String username) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        return stripeServices.loginDashboardLink(dentist);
+    }
+
+    public Boolean getConnectAccountStatus(String username) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        return stripeServices.getConnectAccountStatus(dentist);
+    }
+
+
 }

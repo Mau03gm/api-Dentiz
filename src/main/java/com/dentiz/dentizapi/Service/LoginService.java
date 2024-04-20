@@ -20,6 +20,7 @@ public class LoginService implements UserDetailsService {
         if (dentist == null) {
             throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
+
             return User.builder()
                     .username(dentist.getUsername())
                     .password(dentist.getPassword())

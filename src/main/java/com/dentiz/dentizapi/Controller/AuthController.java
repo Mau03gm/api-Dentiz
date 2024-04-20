@@ -26,10 +26,11 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO) throws Exception {
+    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) throws Exception {
         UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
+        Authentication authentication;
         try {
-             Authentication authentication = this.authenticationManager.authenticate(login);
+              authentication = this.authenticationManager.authenticate(login);
         } catch (Exception e) {
             throw new Exception("Username/Contraseña incorrectos");
         }
@@ -40,7 +41,7 @@ public class AuthController {
             throw new Exception("Error creating token");
         }
 
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).build();
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(authentication.getName());
     }
 
     @PostMapping("/register")
