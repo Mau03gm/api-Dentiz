@@ -2,6 +2,8 @@ package com.dentiz.dentizapi.Controller;
 
 import com.dentiz.dentizapi.Config.Application.Application;
 import com.dentiz.dentizapi.Entity.DTO.DentistProfileDTO;
+import com.dentiz.dentizapi.Entity.DTO.LoginDTO;
+import com.dentiz.dentizapi.Entity.DTO.PaymentMethodDTO;
 import com.dentiz.dentizapi.Entity.DTO.StripeAccount;
 import com.dentiz.dentizapi.Entity.Dentist;
 import com.dentiz.dentizapi.Service.DentistDetailsService;
@@ -37,10 +39,14 @@ public class DentistController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/addPaymentMethod/{username}")
-    public ResponseEntity<Void> addPaymentMethod(@RequestBody String paymentMethod, @PathVariable String username) throws Exception{
-        Dentist dentist = dentistService.validateIfDentistExists(username, username);
-        //dentistDetailsService.addDentistToDentistDetails(dentist, paymentMethod);
+    @PostMapping("/changePaymentMethod/{username}")
+    public ResponseEntity<Void> changePaymentMethod(@RequestBody PaymentMethodDTO paymentMethod, @PathVariable String username) throws Exception{
+        dentistService.changePaymentMethod(username, paymentMethod.getPaymentMethodId());
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/changePlan/{username}")
+    public ResponseEntity<Void> changePlan(@RequestBody LoginDTO plan, @PathVariable String username) throws Exception{
+        //dentistService.changePlan(username, plan);
         return ResponseEntity.ok().build();
     }
 

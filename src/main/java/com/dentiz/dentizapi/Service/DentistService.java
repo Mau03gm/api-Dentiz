@@ -48,7 +48,7 @@ public class DentistService {
         dentist.setPassword(passwordEncoder.encode(dentistDTO.getPassword()));
         String paymentMethod= dentistDTO.getPaymentMethod();
         String costumerId= stripeSubscriptions.createCostumer(dentist, paymentMethod);
-        Plan plan = stripeSubscriptions.getPlan("Basic");
+        Plan plan = stripeSubscriptions.getPlan(dentistDTO.getPlan());
         String subscriptionId= stripeSubscriptions.createCostumerSubscription(costumerId,plan ,paymentMethod);
         dentistRepository.save(dentist);
         MailStructure mailStructure = MailStructure.builder()
@@ -134,5 +134,9 @@ public class DentistService {
         return stripeServices.getConnectAccountStatus(dentist);
     }
 
+    public void changePaymentMethod(String username, String paymentMethod) throws Exception {
+        Dentist dentist = validateIfDentistExists(username, username);
+        stripeSubscriptions.updateCostumerPaymentMethod(dentist, paymentMethod);
+    }
 
 }
