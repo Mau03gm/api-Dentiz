@@ -29,7 +29,9 @@ public class Plan {
     @Column(name = "price")
     private Long price; // Monto en centavos
     @Column(name = "currency")
-    private String currency; // Moneda (ej. "eur")
+    private String currency; // Moneda en la que se cobra
     @Column(name = "free_trial_days")
     private Long freeTrialDays;
+    @Column(name = "interval_name")
+    private String interval;
 }

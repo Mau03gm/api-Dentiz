@@ -17,13 +17,25 @@ public class ConstructStripe {
 
     @PostConstruct
     public void init() {
-        if (stripeRepository.findByName("Dentiz Basic") == null) {
+        if (stripeRepository.findByName("Dentiz Mensual") == null) {
             Plan plan = new Plan();
-            plan.setName("Dentiz Basic");
-            plan.setDescription("Plan básico");
-            plan.setPrice(50000L); // 500 pesos mexicanos en centavos
+            plan.setName("Dentiz Mensual");
+            plan.setDescription("Plan de subscripcion mensual para la plataforma Dentiz");
+            plan.setPrice(49900L); // 499 pesos mexicanos en centavos
             plan.setCurrency("mxn");
             plan.setFreeTrialDays(14L);
+            plan.setInterval("month");
+            stripeSubscriptions.createPlan(plan);
+            stripeRepository.save(plan);
+        }
+        if (stripeRepository.findByName("Dentiz Anual") == null) {
+            Plan plan = new Plan();
+            plan.setName("Dentiz Anual");
+            plan.setDescription("Plan de subscripcion anual para la plataforma Dentiz");
+            plan.setPrice(520000L); // 5200 pesos mexicanos en centavos
+            plan.setCurrency("mxn");
+            plan.setFreeTrialDays(14L);
+            plan.setInterval("year");
             stripeSubscriptions.createPlan(plan);
             stripeRepository.save(plan);
         }
