@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class AppointmentService {
@@ -50,13 +51,17 @@ public class AppointmentService {
         Appointment appointment = new Appointment(appointmentDTO, dentistDetails, patient, service);
         PriceService priceService =priceServiceService.getPriceService(service, dentistDetails);
         stripeServices.createPaymentIntent(appointmentDTO.getPaymentMethod(), priceService, dentist  );
-        appointmentRepository.save(appointment);
+        appointmentRepository.save(appointment);  
         MailStructure mailStructure = MailStructure.builder()
                 .subject("Cita creada")
                 .body("Tiene una cita programada para el dia " + appointmentDTO.getDate() + " a las " + appointmentDTO.getHour())
                 .build();
-        mailService.sendMail(dentist.getEmail(), mailStructure);
-        mailService.sendMail(patient.getEmail(), mailStructure);
+        try {
+            mailService.sendMail(dentist.getEmail(), mailStructure);
+            mailService.sendMail(patient.getEmail(), mailStructure);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return appointmentDTO;
     }
 
